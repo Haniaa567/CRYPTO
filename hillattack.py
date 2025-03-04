@@ -61,5 +61,5 @@ def attack_hill(ciphertext):
             continue
 
 # --- Exemple d'utilisation ---
-ciphertext = "ZEBRASKTUVWX"
+ciphertext = "GZATZXJIHVBREOSU"
 attack_hill(ciphertext)
