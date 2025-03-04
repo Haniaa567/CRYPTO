@@ -70,15 +70,87 @@ def decrypt(ciphertext, key):
 
 if __name__ == "__main__":
     block_size = 4 # Taille du bloc (modifiable)
-    key = generate_random_matrix(block_size)
-
+    #key = generate_random_matrix(block_size)
+    key=[[7,15],[24,15]]
     print("Matrice de clé utilisée :")
     print(key)
 
-    message = "HELLOHILLLLL"
+    message = "LAETYUZPXBXP"
 
     encrypted_message = encrypt(message, key)
     print(f"Message chiffré : {encrypted_message}")
 
     decrypted_message = decrypt(encrypted_message, key)
     print(f"Message déchiffré : {decrypted_message}")
+'''
+import numpy as np
+from math import gcd
+
+# Vérifier l'inversibilité
+def is_invertible(matrix, mod=26):
+    det = int(round(np.linalg.det(matrix))) % mod
+    return gcd(det, mod) == 1
+
+# Convertir texte en nombres (A=0, ..., Z=25)
+def letter_to_number(text):
+    return [ord(char) - ord('A') for char in text]
+
+# Convertir nombres en texte
+def number_to_letter(numbers):
+    return ''.join(chr(n + ord('A')) for n in numbers)
+
+# Chiffrer avec Hill
+def encrypt(message, key):
+    n = len(key)
+    message = message.upper().replace(" ", "")
+    # Compléter le message si nécessaire
+    while len(message) % n != 0:
+        message += 'X'
+
+    message_numbers = letter_to_number(message)
+    encrypted_numbers = []
+
+    for i in range(0, len(message_numbers), n):
+        block = np.array(message_numbers[i:i + n])
+        encrypted_block = np.dot(key, block) % 26
+        encrypted_numbers.extend(encrypted_block)
+
+    return number_to_letter(encrypted_numbers)
+
+# Déchiffrer avec Hill
+def decrypt(ciphertext, key):
+    n = len(key)
+    key_inv = np.linalg.inv(key) * round(np.linalg.det(key))
+    key_inv = np.round(key_inv).astype(int) % 26
+    det_inv = pow(int(round(np.linalg.det(key))) % 26, -1, 26)
+    key_inv = (det_inv * key_inv) % 26
+
+    ciphertext_numbers = letter_to_number(ciphertext)
+    decrypted_numbers = []
+
+    for i in range(0, len(ciphertext_numbers), n):
+        block = np.array(ciphertext_numbers[i:i + n])
+        decrypted_block = np.dot(key_inv, block) % 26
+        decrypted_numbers.extend(decrypted_block)
+
+    return number_to_letter(decrypted_numbers)
+
+if __name__ == "__main__":
+    block_size = 2
+    key = [[7, 15], [24, 15]]
+
+    if not is_invertible(key):
+        print("⚠️ La matrice clé n'est pas inversible modulo 26.")
+        exit()
+
+    print("Matrice de clé utilisée :")
+    print(np.array(key))
+
+    message = "LAETYUZPXBXP"
+
+    encrypted_message = encrypt(message, key)
+    print(f"Message chiffré : {encrypted_message}")
+
+    decrypted_message = decrypt(encrypted_message, key)
+    print(f"Message déchiffré : {decrypted_message}")
+'''
