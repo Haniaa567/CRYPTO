@@ -44,7 +44,7 @@ def kasiski_test(ciphertext, min_length=3):
 
 # Exemple d'utilisation :
 if __name__ == "__main__":
-    texte_chiffre = "ABCXYZABCKLMNOPQRSABC"  # Exemple chiffré
+    texte_chiffre = "XPOJSVVGJZDUKSIYIUMZIESIXXZUWLQSXGMTLHATLWFLTFRVXJVLJIZJHPMJYYINSUFSUEPZTFUIIOPMWJHYGZBNTEHGSMCJIGKJMIJLBTPRSIRINJZDUKSIYIUMZIOVLJWEI"  # Exemple chiffré
     resultats = kasiski_test(texte_chiffre)
 
     print("\n🔍 Longueurs de clé probables :", resultats)
