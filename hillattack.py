@@ -171,7 +171,7 @@ ENGLISH_LETTER_FREQ = {
     'V': 0.0098, 'K': 0.0077, 'J': 0.0015, 'X': 0.0015, 'Q': 0.0009,
     'Z': 0.0007
 }
-
+'''''
 def load_hill_matrices(input_file='hill_matrices.json'):
     """
     Charge les matrices de Hill à partir d'un fichier JSON
@@ -189,7 +189,7 @@ def load_hill_matrices(input_file='hill_matrices.json'):
     except FileNotFoundError:
         print(f"Fichier {input_file} non trouvé. Générez d'abord les matrices.")
         return []
-
+'''
 def letter_to_number(letter):
     return ord(letter.upper()) - ord('A')
 
@@ -253,6 +253,7 @@ def decrypt_Hill(ciphertext, key, block_size):
 
     return decrypted_text
 
+'''''
 def blind_attack_Hill(ciphertext, block_size=2, top_n=20, language='fr'):
     """Attaque aveugle du chiffrement de Hill avec les top N résultats"""
 
@@ -306,15 +307,90 @@ def blind_attack_Hill(ciphertext, block_size=2, top_n=20, language='fr'):
     possible_decryptions.sort(key=lambda x: x['score'], reverse=True)
 
     return possible_decryptions[:top_n]
-
-def main():
-    # Liste des ciphertexts à tester
-    ciphertext ="KZGNVXCHQWMY"
-    block_size = 3
+'''
+def load_hill_matrices(block_size=3):
+    """
+    Charge les matrices de Hill à partir d'un fichier JSON
+    
+    Args:
+    - block_size (int): Taille du bloc (2 ou 3)
+    
+    Returns:
+    - list: Liste des matrices chargées
+    """
+    # Choisir le fichier en fonction de la taille du bloc
+    if block_size == 3:
+        input_file = 'hill_matrices.json'
+    elif block_size == 2:
+        input_file = 'hill_matrices_2x2.json'
+    else:
+        print("Taille de bloc non supportée. Utilisez 2 ou 3.")
+        return []
 
     try:
+        with open(input_file, 'r') as f:
+            matrices = json.load(f)
+        return [np.array(matrix) for matrix in matrices]
+    except FileNotFoundError:
+        print(f"Fichier {input_file} non trouvé. Veuillez générer les matrices.")
+        return []
+
+def blind_attack_Hill(ciphertext, block_size=2, top_n=20, language='fr'):
+    """Attaque aveugle du chiffrement de Hill avec les top N résultats"""
+
+    # Vérifier si la taille du texte est compatible avec le bloc
+    if len(ciphertext) % block_size != 0:
+        raise ValueError("La taille du texte chiffré doit être un multiple de la taille du bloc.")
+
+    possible_decryptions = []
+
+    # Charger les matrices spécifiques à la taille du bloc
+    matrices = load_hill_matrices(block_size)
+    
+    # Si pas de matrices chargées, revenir à la génération de clés
+    if not matrices:
+        key_generation = itertools.product(range(26), repeat=block_size*block_size)
+    else:
+        key_generation = matrices
+    
+    # Générer des clés potentielles
+    for key_values in key_generation:
+        key = np.array(key_values).reshape((block_size, block_size))
+
+        # Vérifier l'inversibilité de la clé
+        if not is_invertible_mod26(key):
+            continue
+
+        try:
+            # Déchiffrer avec la clé
+            decrypted_text = decrypt_Hill(ciphertext, key, block_size)
+
+            # Scorer le déchiffrement
+            score = score_decryption(decrypted_text, language)
+
+            # Stocker le résultat
+            possible_decryptions.append({
+                'key': key,
+                'decrypted_text': decrypted_text,
+                'score': score
+            })
+
+        except Exception:
+            continue
+
+    # Trier les déchiffrements par score
+    possible_decryptions.sort(key=lambda x: x['score'], reverse=True)
+
+    return possible_decryptions[:top_n]
+def main():
+    # Liste des ciphertexts à tester
+    #ciphertext ="KZGNVXCHQWMY"
+    #block_size = 3
+    ciphertext = "XIYVCWUM"
+    block_size = 2
+    try:
         # Obtenir les 10 meilleures possibilités
-        top_decryptions = blind_attack_Hill(ciphertext, block_size, language='en')
+        top_decryptions = blind_attack_Hill(ciphertext, block_size, language='fr')
 
         # Afficher les résultats
         for i, result in enumerate(top_decryptions, 1):
