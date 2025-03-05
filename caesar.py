@@ -1,6 +1,7 @@
 from collections import Counter
 # english alphabet frequency order
 ENGLISH_FREQUENCY_ORDER = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
+FRENCH_FREQUENCY_ORDER = "ESARTINULOMDPCVGBFHQYXJZK"
 
 # function to encrypt a text
 def ceasar_encryption(text,shift):
@@ -31,26 +32,29 @@ def brute_force_ceasar(cipher):
     for shift in range(1,26):
         print(f"Shift: {shift} -> {ceasar_decryption(cipher,shift)}")
 
-# function to crack caesar cipher using frequency analysis by 
-def frequency_analysis(cipher):
+# function to crack caesar cipher using frequency analysis  
+def frequency_analysis(cipher,language="english"):
     letter_counts = Counter([char.upper() for char in cipher if char.isalpha()])
     if not letter_counts:
-        return 0  # If no letters exist, return 0
+        return []  # if no letters exist, return empty list
     
     most_common_cipher_letter = letter_counts.most_common(1)[0][0]
+    # use english or french frequency order
+    frequency_order = ENGLISH_FREQUENCY_ORDER if language.lower() == "english" else FRENCH_FREQUENCY_ORDER
     
-    # Test multiple common letters in English
-    possible_shifts = []
-    for expected_letter in ENGLISH_FREQUENCY_ORDER[:5]:  # Check E, T, A, O, I
+    possible_shifts = set()  # use a set to remove duplicates if right and left shifts give the same number
+    for expected_letter in frequency_order[:5]:  # check E, T, A, O, I
         shift_guess = (ord(most_common_cipher_letter) - ord(expected_letter)) % 26
-        possible_shifts.append(shift_guess)
+        possible_shifts.add(shift_guess)  # right shift
+        possible_shifts.add((-shift_guess) % 26)  # left shift (handling negatives)
 
-    return possible_shifts
+    return sorted(possible_shifts)  # return sorted list
+
 
 
 if __name__ == "__main__":
-    text="lorem ipsum dolores sit amet"
-    shift=3
+    text="une souris verte qui courait dans l'herbe"
+    shift=-5
     enc=ceasar_encryption(text,shift)
     print(f"encrypted text:{enc}")
 
@@ -61,6 +65,6 @@ if __name__ == "__main__":
     guessed_shifts = frequency_analysis(enc)
     print(f"Possible shifts: {guessed_shifts}")
 
-    # Try each guessed shift
+    # try each guessed shift from the list
     for shift in guessed_shifts:
         print(f"Decryption with shift {shift}: {ceasar_decryption(enc, shift)}")
