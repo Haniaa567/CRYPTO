@@ -55,32 +55,31 @@ def affine_brute_force(cipher):
 def affine_frequency_analysis(cipher,language="english"):
     letter_counts = Counter([char.upper() for char in cipher if char.isalpha()])
     if not letter_counts:
-        return None  # No letters found
+        return None  # no letters found
 
-    most_common_cipher_letter = letter_counts.most_common(1)[0][0]
-
-    # pick English or French frequency order
+    # sort by frequency
+    sorted_cipher_letters = [pair[0] for pair in letter_counts.most_common()]
     frequency_order = ENGLISH_FREQ_ORDER if language.lower() == "english" else FRENCH_FREQ_ORDER
 
-    # try multiple common letters
-    for expected_letter in frequency_order[:5]:  # try first 5 common letters
-        C = ord(most_common_cipher_letter) - ord('A')
-        P = ord(expected_letter) - ord('A')
+    possible_A_values = [a for a in range(1, 26) if gcd(a, 26) == 1]
 
-        # solve for A and B
-        possible_A_values = [a for a in range(1, 26) if gcd(a, 26) == 1]  # A must be coprime with 26
-        for A in possible_A_values:
-            B = (C - A * P) % 26
-            decrypted_text = affine_decrypt(cipher, A, B)
-            if decrypted_text:
-                print(f"Possible decryption (A={A}, B={B}): {decrypted_text}")
+    for cipher_letter in sorted_cipher_letters[:3]:  # try the 3 most common cipher letters
+        for expected_letter in frequency_order[:5]:  # try the 5 most common plaintext letters
+            C = ord(cipher_letter) - ord('A')
+            P = ord(expected_letter) - ord('A')
+
+            for A in possible_A_values:
+                B = ((C - A * P) % 26 + 26) % 26  # fix negative values
+                decrypted_text = affine_decrypt(cipher, A, B)
+                if decrypted_text:
+                    print(f"Possible decryption (A={A}, B={B}): {decrypted_text}")
 
 
 A = 5  # coeff 1
 B = 8  # coeff 2
 
 text = "BONJOUR LE MONDE"
-cipher_text="FMXVEDKAPHFERBNDKRXRSREFMORUDSDKDVSHVUFEDKAPRKDLYEVLRHHRH"
+cipher_text="DMVQR ADPHV PNLAA RTFHK ARMDX AKVUP ZMDUR INKSV KFSZP VERAR ENDSR ODKFM MIZIR DSXFH KNYDO DODVK "
 encrypted = affine_encrypt(text, A, B)
 print(f"Texte chiffré : {encrypted}")
 
