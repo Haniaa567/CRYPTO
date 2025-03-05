@@ -1,7 +1,7 @@
 import numpy as np
 from sympy import Matrix, mod_inverse
-import itertools
 import json
+import os
 
 def is_invertible_mod26(matrix):
     """Vérification rigoureuse de l'inversibilité modulo 26"""
@@ -13,12 +13,11 @@ def is_invertible_mod26(matrix):
     except ValueError:
         return False
 
-def generate_valid_hill_matrices(block_size=3, num_matrices=1000, output_file='hill_matrices.json'):
+def generate_valid_2x2_hill_matrices(num_matrices=1000, output_file='hill_matrices_2x2.json'):
     """
-    Génère des matrices de Hill valides de taille block_size x block_size
+    Génère des matrices de Hill valides de taille 2x2
     
     Args:
-    - block_size (int): Taille des matrices carrées (défaut: 3)
     - num_matrices (int): Nombre de matrices à générer (défaut: 1000)
     - output_file (str): Fichier de sortie pour stocker les matrices
     
@@ -28,15 +27,15 @@ def generate_valid_hill_matrices(block_size=3, num_matrices=1000, output_file='h
     valid_matrices = []
     
     # Nombre total de combinaisons possibles
-    total_combinations = 26 ** (block_size * block_size)
+    total_combinations = 26 ** 4
     
     # Limite pour éviter une boucle infinie
     max_attempts = min(total_combinations, 1_000_000)
     
     attempts = 0
     while len(valid_matrices) < num_matrices and attempts < max_attempts:
-        # Générer une matrice aléatoire
-        key_values = np.random.randint(0, 26, size=(block_size, block_size))
+        # Générer une matrice 2x2 aléatoire
+        key_values = np.random.randint(0, 26, size=(2, 2))
         
         # Vérifier l'inversibilité de la matrice
         if is_invertible_mod26(key_values):
@@ -49,12 +48,12 @@ def generate_valid_hill_matrices(block_size=3, num_matrices=1000, output_file='h
     with open(output_file, 'w') as f:
         json.dump(valid_matrices, f)
     
-    print(f"Généré {len(valid_matrices)} matrices valides et sauvegardé dans {output_file}")
+    print(f"Généré {len(valid_matrices)} matrices 2x2 valides et sauvegardé dans {output_file}")
     return valid_matrices
 
-def load_hill_matrices(input_file='hill_matrices.json'):
+def load_2x2_hill_matrices(input_file='hill_matrices_2x2.json'):
     """
-    Charge les matrices de Hill à partir d'un fichier JSON
+    Charge les matrices de Hill 2x2 à partir d'un fichier JSON
     
     Args:
     - input_file (str): Fichier contenant les matrices
@@ -71,17 +70,35 @@ def load_hill_matrices(input_file='hill_matrices.json'):
         return []
 
 def main():
-    # Générer des matrices de Hill valides de taille 3x3
-    generate_valid_hill_matrices(block_size=3, num_matrices=10000)
+    # Générer des matrices 2x2
+    generate_valid_2x2_hill_matrices(num_matrices=50000)
     
-    # Charger et utiliser les matrices
-    matrices = load_hill_matrices()
-    print(f"Nombre de matrices chargées : {len(matrices)}")
+    # Charger et afficher quelques matrices
+    matrices = load_2x2_hill_matrices()
+    print(f"\nMatrices 2x2 chargées :")
+    print(f"Nombre de matrices : {len(matrices)}")
     
-    # Exemple d'utilisation d'une matrice
-    if matrices:
-        print("Première matrice chargée :")
-        print(matrices[0])
+    # Afficher les 3 premières matrices si disponibles
+    for i, matrix in enumerate(matrices[:3], 1):
+        print(f"\nMatrice {i} :")
+        print(matrix)
+
+def verify_matrices():
+    """Vérification supplémentaire des matrices générées"""
+    matrices = load_2x2_hill_matrices()
+    
+    print("\nVérification des matrices 2x2")
+    invalid_count = 0
+    
+    for matrix in matrices:
+        if not is_invertible_mod26(matrix):
+            invalid_count += 1
+            print(f"Matrice invalide trouvée :\n{matrix}")
+    
+    print(f"Nombre de matrices invalides : {invalid_count}")
+    print(f"Nombre total de matrices : {len(matrices)}")
 
 if __name__ == "__main__":
     main()
+    # Décommentez pour vérification détaillée
+    # verify_matrices()
