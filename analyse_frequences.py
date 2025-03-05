@@ -70,8 +70,8 @@ def _decypher(cyphertext, key):
     return ''.join(decyphered_blocks)
 
 # Exemple d'utilisation
-cyphertext = "ABCXYZABCKLMNOPQRSABC"
-key_len = 3
+cyphertext = "XPOJSVVGJZDUKSIYIUMZIESIXXZUWLQSXGMTLHATLWFLTFRVXJVLJIZJHPMJYYINSUFSUEPZTFUIIOPMWJHYGZBNTEHGSMCJIGKJMIJLBTPRSIRINJZDUKSIYIUMZIOVLJWEI"
+key_len = 7
 
 key = restore_key(cyphertext, key_len)
 decyphered = _decypher(cyphertext, key)
