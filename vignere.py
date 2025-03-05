@@ -1,118 +1,129 @@
-import re
-from collections import Counter
-from itertools import cycle
+# coding=utf-8
+from __future__ import division, print_function, absolute_import
+from getchr import *
+def add(x,y):
+    if x == "_" or y == "_":
+        return "_"
+    return chr((((ord(x)-65)+(ord(y)-65)) % 26)+65)
+def sub(x,y):
+    if x == "_" or y == "_":
+        return "_"
+    return chr((((ord(x)-65)-(ord(y)-65)) % 26)+65)
+def adds(a,b):
+    return "".join([add(x,y) for (x,y) in zip(a,b)])
+def subs(a,b):
+    return "".join([sub(x,y) for (x,y) in zip(a,b)])
+def encode(text, key):
+    text, key = clean(text), clean(key)
+    ret = ""
+    while len(text) > len(key):
+        ret += adds(text, key)
+        text = text[len(key):]
+    ret += adds(text, key[:len(text)])
+    return ret
+def decode(text, key):
+    text, key = clean(text), clean(key)
+    if len(key)> len(text):
+        key = key[:len(text)]
+    ret = ""
+    while len(text) > len(key):
+        ret += subs(text, key)
+        text = text[len(key):]
+    ret += subs(text, key[:len(text)])
+    return ret
+def clean(text):
+    return "".join(filter(lambda x: x in "ABCDEFGHIJKLMNOPQRSTUVWXYZ_",text.upper()))
 
-ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+def is_repetition(hay, needle):
+    hay, needle = clean(hay), clean(needle)
+    if not hay or not needle:
+        return True
+    return hay[0] == needle[0] and is_repetition(hay[1:], needle[1:] + needle[0])
+def build_key_from_part(keypart, index, length):
+    keypart = clean(keypart)
+    keypart = keypart[:length]
+    keypart = keypart[index:] + "_" * (length-len(keypart)) + keypart[:index]
+    return keypart
+def guess_key(crypt, guess, length=3):
+    '''Returns list of tuples of guesses for given key length'''
+    solutions = []
+    for i in range(len(crypt)-len(guess)+1):
+        crypart = crypt[i:i+len(guess)]
+        keypart = subs(crypart, guess)
+        if len(keypart) > length:
+            if not is_repetition(keypart, keypart[:length]):
+                continue
+        decoded = False
+        for n in range(length):
+            key = build_key_from_part(keypart, (i+n) % length, length)
+            decoded = decode(crypt, key)
+            if guess in decoded:
+                break
+        if decoded and guess in decoded:
+            solutions.append((decoded, key))
+    return solutions
 
-def preprocess_text(text):
-    """Enlève les caractères non alphabétiques et met en majuscules."""
-    return re.sub(r'[^A-Z]', '', text.upper())
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        args = sys.argv[1:]
+        if args[0] == "-m":
+            crypt = "".join(args[1:])
+        elif args[0] == "-d":
+            for line in sys.stdin:
+                print(decode(line,args[1]).lower())
+            sys.exit()
+        elif args[0] == "-e":
+            for line in sys.stdin:
+                print(encode(line,args[1]))
+            sys.exit()
+    else:
+        print('''Usage:
+        python3 vignere.py -d|-e <key>              #en/decodes stdin
+        python3 vignere.py -m <encrypted_message>   #starts interactive mode
 
-def vigenere_encrypt(text, key):
-    """Chiffre un texte avec Vigenère."""
-    text, key = preprocess_text(text), preprocess_text(key)
-    encrypted = ''.join(ALPHABET[(ALPHABET.index(t) + ALPHABET.index(k)) % 26] 
-                        for t, k in zip(text, cycle(key)))
-    return encrypted
-
-def vigenere_decrypt(text, key):
-    """Déchiffre un texte avec Vigenère."""
-    text, key = preprocess_text(text), preprocess_text(key)
-    decrypted = ''.join(ALPHABET[(ALPHABET.index(t) - ALPHABET.index(k)) % 26] 
-                        for t, k in zip(text, cycle(key)))
-    return decrypted
-
-def kasiski_test(ciphertext, min_length=3):
-    """Trouve les répétitions dans le texte chiffré et estime la longueur de la clé."""
-    ciphertext = preprocess_text(ciphertext)
-    sequences = {}
-    
-    for i in range(len(ciphertext) - min_length):
-        seq = ciphertext[i:i+min_length]
-        if seq in sequences:
-            sequences[seq].append(i)
+In interactive mode, enter possible keys or expected message parts,
+use arrow keys (up and down) to change expected key size.''')
+        sys.exit()
+    buffr = ""
+    key_length = 1
+    auto_increasing = False
+    while True:
+        print(chr(27) + "[2J")
+        results = guess_key(crypt, buffr, key_length)
+        if auto_increasing:
+            if buffr and not results:
+                key_length += 1
+                continue
+            else:
+                auto_increasing = False
+        for text, key in results:
+            print(text.lower(), "(" + key + ")")
         else:
-            sequences[seq] = [i]
-
-    distances = []
-    for seq, positions in sequences.items():
-        if len(positions) > 1:
-            for j in range(1, len(positions)):
-                distances.append(positions[j] - positions[j-1])
-    
-    if not distances:
-        return []
-
-    factors = Counter()
-    for d in distances:
-        for f in range(2, d + 1):
-            if d % f == 0:
-                factors[f] += 1
-
-    probable_lengths = [k for k, v in factors.most_common(5)]
-    return probable_lengths
-
-def index_of_coincidence(text):
-    """Calcule l'indice de coïncidence du texte."""
-    text = preprocess_text(text)
-    n = len(text)
-    freqs = Counter(text)
-    return sum(f * (f - 1) for f in freqs.values()) / (n * (n - 1)) if n > 1 else 0
-
-def guess_key_length(ciphertext):
-    """Tente de deviner la longueur de la clé en combinant Kasiski et IC."""
-    possible_lengths = kasiski_test(ciphertext)
-    
-    if not possible_lengths:
-        print("Aucune longueur de clé trouvée via Kasiski. Essai avec l'indice de coïncidence...")
-        for l in range(1, 21):  # Tester différentes longueurs de clé
-            segments = [''.join(ciphertext[i::l]) for i in range(l)]
-            avg_ic = sum(index_of_coincidence(seg) for seg in segments) / l
-            if 0.06 <= avg_ic <= 0.08:  # Intervalle typique du français et de l'anglais
-                possible_lengths.append(l)
-
-    return possible_lengths[:3]  # On garde les 3 longueurs les plus probables
-
-def frequency_analysis(segment):
-    """Identifie le décalage du chiffre de César dans un segment basé sur l'analyse fréquentielle."""
-    freq_french = "ETAOINSHRDLCUMWFGYPBVKJXQZ"  # Ordre des lettres les plus fréquentes en français
-    counts = Counter(segment)
-    most_common_letter = counts.most_common(1)[0][0] if counts else 'E'
-    
-    shift = (ALPHABET.index(most_common_letter) - ALPHABET.index('E')) % 26
-    return ALPHABET[shift]
-
-def vigenere_break(ciphertext):
-    """Essaye de casser le chiffre de Vigenère sans clé."""
-    ciphertext = preprocess_text(ciphertext)
-    key_lengths = guess_key_length(ciphertext)
-
-    if not key_lengths:
-        print("Impossible de déterminer la longueur de la clé.")
-        return []
-
-    results = []
-    for key_length in key_lengths:
-        key_guess = ''.join(frequency_analysis(ciphertext[i::key_length]) for i in range(key_length))
-        decrypted_text = vigenere_decrypt(ciphertext, key_guess)
-        results.append((key_guess, decrypted_text))
-
-    return results
-
-# Exemple d'utilisation :
-if __name__ == "__main__":
-    message = "LE MESSAGE SECRET EST CACHE ICI"
-    key = "CLE"
-
-    encrypted = vigenere_encrypt(message, key)
-    print(f"🔒 Texte chiffré : {encrypted}")
-
-    decrypted = vigenere_decrypt(encrypted, key)
-    print(f"🔓 Texte déchiffré : {decrypted}")
-
-    print("\n🔍 Cryptanalyse en cours...")
-    probable_keys = vigenere_break(encrypted)
-
-    print("\n🔑 Résultats probables :")
-    for k, d in probable_keys:
-        print(f"Clé : {k} → {d}")
+            print()
+        if len(buffr) > 0:
+            print("<" + buffr + ">:", decode(crypt, buffr).lower())
+        sys.stdout.flush()
+        print("[↕"+ str(key_length) + "]> " + buffr.lower(), end="")
+        sys.stdout.flush()
+        char = getchr()
+        sys.stdout.flush()
+        if char == "\x1b":
+            char = getchr()
+            if char == "\x1b":
+                sys.exit()
+            char = getchr()
+            if char == "A":
+                key_length += 1
+            elif char == "B" and key_length > 1:
+                key_length -= 1
+        elif char == "\x7f": #backspace
+            if buffr:
+                buffr = buffr[:-1]
+                buffr = clean(buffr)
+                key_length = 1
+                auto_increasing = True
+        else:
+            buffr += clean(char)
+            if clean(char):
+                key_length = 1
+                auto_increasing = True
