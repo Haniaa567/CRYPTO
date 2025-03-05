@@ -1,5 +1,3 @@
-
-# Chiffrement de Hill avec taille de bloc variable
 import numpy as np
 
 # Paramètre global
@@ -20,12 +18,6 @@ def is_inversible(matrix):
     det = int(round(np.linalg.det(matrix))) % ALPHABET_SIZE
     return pgcd(det, ALPHABET_SIZE) == 1
 
-def generate_random_matrix(size):
-    while True:
-        matrix = np.random.randint(0, ALPHABET_SIZE, (size, size))
-        if is_inversible(matrix):
-            return matrix
-
 def matrix_mod_inverse(matrix):
     det = int(round(np.linalg.det(matrix))) % ALPHABET_SIZE
     inv_det = mod_inverse(det, ALPHABET_SIZE)
@@ -35,9 +27,13 @@ def matrix_mod_inverse(matrix):
     return (adjugate * inv_det) % ALPHABET_SIZE
 
 def text_to_vector(text, size):
+       
+    initial_length = len(text)
     text = text.upper().replace(" ", "")
     while len(text) % size != 0:
         text += 'X'
+    if len(text) > initial_length:  # Si on a ajouté des 'X'
+        print(f"\n[INFO] Un ou plusieurs caractères 'X' ont été ajoutés pour compléter le bloc ({len(text) - initial_length} ajouté(s)).")
     return [ord(char) - ord('A') for char in text]
 
 def vector_to_text(vector):
@@ -69,89 +65,74 @@ def decrypt(ciphertext, key):
 
     return vector_to_text(decrypted_vector)
 
+def saisir_matrice():
+    while True:
+        try:
+            # Demander la taille de la matrice
+            taille = int(input("Entrez la taille de la matrice (2 ou 3) : "))
+            if taille not in [2, 3]:
+                print("La taille doit être 2 ou 3.")
+                continue
+
+            # Saisie de la matrice
+            matrice = []
+            print(f"Entrez les {taille}x{taille} éléments de la matrice (valeurs entre 0 et 25) :")
+            for i in range(taille):
+                ligne = input(f"Ligne {i+1} (séparés par des espaces) : ").split()
+                ligne = [int(x) % 26 for x in ligne]
+                if len(ligne) != taille:
+                    print(f"Vous devez entrer exactement {taille} éléments.")
+                    break
+                matrice.append(ligne)
+            else:
+                # Convertir en numpy array et vérifier l'inversibilité
+                np_matrice = np.array(matrice)
+                if is_inversible(np_matrice):
+                    return np_matrice
+                else:
+                    print("La matrice n'est pas inversible modulo 26. Réessayez.")
+        except ValueError:
+            print("Entrée invalide. Utilisez des nombres entiers.")
+
+def main():
+    while True:
+        # Menu principal
+        print("\n--- Chiffrement de Hill ---")
+        print("1. Chiffrer un message")
+        print("2. Déchiffrer un message")
+        print("3. Quitter")
+        
+        choix = input("Votre choix (1-3) : ")
+        
+        if choix == '3':
+            break
+        
+        if choix not in ['1', '2']:
+            print("Choix invalide.")
+            continue
+        
+        # Saisie de la matrice de clé
+        print("\nSaisie de la matrice de clé :")
+        key = saisir_matrice()
+        print("\nMatrice de clé :")
+        print(key)
+        
+        # Saisie du message
+        message = input("\nEntrez le message (lettres majuscules uniquement) : ").upper()
+        
+        try:
+            if choix == '1':
+                # Chiffrement
+                message_chiffre = encrypt(message, key)
+                print(f"\nMessage chiffré : {message_chiffre}")
+            else:
+                # Déchiffrement
+                message_dechiffre = decrypt(message, key)
+                print(f"\nMessage déchiffré : {message_dechiffre}")
+        
+        except Exception as e:
+            print(f"Erreur : {e}")
+
 if __name__ == "__main__":
-    block_size = 4 # Taille du bloc (modifiable)
-    #key = generate_random_matrix(block_size)
-    key=[[7,15],[24,15]]
-    print("Matrice de clé utilisée :")
-    print(key)
+    main()
 
-    message = "LAETYUZPXBXP"
-
-    encrypted_message = encrypt(message, key)
-    print(f"Message chiffré : {encrypted_message}")
-
-    decrypted_message = decrypt(encrypted_message, key)
-    print(f"Message déchiffré : {decrypted_message}")
-'''
-import numpy as np
-from math import gcd
-
-# Vérifier l'inversibilité
-def is_invertible(matrix, mod=26):
-    det = int(round(np.linalg.det(matrix))) % mod
-    return gcd(det, mod) == 1
-
-# Convertir texte en nombres (A=0, ..., Z=25)
-def letter_to_number(text):
-    return [ord(char) - ord('A') for char in text]
-
-# Convertir nombres en texte
-def number_to_letter(numbers):
-    return ''.join(chr(n + ord('A')) for n in numbers)
-
-# Chiffrer avec Hill
-def encrypt(message, key):
-    n = len(key)
-    message = message.upper().replace(" ", "")
-    # Compléter le message si nécessaire
-    while len(message) % n != 0:
-        message += 'X'
-
-    message_numbers = letter_to_number(message)
-    encrypted_numbers = []
-
-    for i in range(0, len(message_numbers), n):
-        block = np.array(message_numbers[i:i + n])
-        encrypted_block = np.dot(key, block) % 26
-        encrypted_numbers.extend(encrypted_block)
-
-    return number_to_letter(encrypted_numbers)
-
-# Déchiffrer avec Hill
-def decrypt(ciphertext, key):
-    n = len(key)
-    key_inv = np.linalg.inv(key) * round(np.linalg.det(key))
-    key_inv = np.round(key_inv).astype(int) % 26
-    det_inv = pow(int(round(np.linalg.det(key))) % 26, -1, 26)
-    key_inv = (det_inv * key_inv) % 26
-
-    ciphertext_numbers = letter_to_number(ciphertext)
-    decrypted_numbers = []
-
-    for i in range(0, len(ciphertext_numbers), n):
-        block = np.array(ciphertext_numbers[i:i + n])
-        decrypted_block = np.dot(key_inv, block) % 26
-        decrypted_numbers.extend(decrypted_block)
-
-    return number_to_letter(decrypted_numbers)
-
-if __name__ == "__main__":
-    block_size = 2
-    key = [[7, 15], [24, 15]]
-
-    if not is_invertible(key):
-        print("⚠️ La matrice clé n'est pas inversible modulo 26.")
-        exit()
-
-    print("Matrice de clé utilisée :")
-    print(np.array(key))
-
-    message = "LAETYUZPXBXP"
-
-    encrypted_message = encrypt(message, key)
-    print(f"Message chiffré : {encrypted_message}")
-
-    decrypted_message = decrypt(encrypted_message, key)
-    print(f"Message déchiffré : {decrypted_message}")
-'''
