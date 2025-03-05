@@ -28,12 +28,13 @@ def ceasar_decryption(text,shift):
 
 # function to crack caesar cipher using brute force by testing shifts from 1 to 25
 def brute_force_ceasar(cipher):
-    print("brute force attack on ceasar cipher:")
+    print("\nbrute force attack on ceasar cipher:")
     for shift in range(1,26):
         print(f"Shift: {shift} -> {ceasar_decryption(cipher,shift)}")
 
 # function to crack caesar cipher using frequency analysis  
 def frequency_analysis(cipher,language="english"):
+    print("\nfrequency analysis attack on ceasar cipher:")
     letter_counts = Counter([char.upper() for char in cipher if char.isalpha()])
     if not letter_counts:
         return []  # if no letters exist, return empty list
@@ -56,14 +57,14 @@ if __name__ == "__main__":
     text="une souris verte qui courait dans l'herbe"
     shift=-5
     enc=ceasar_encryption(text,shift)
-    print(f"encrypted text:{enc}")
+    print(f"\nencrypted text:{enc}")
 
     dec=ceasar_decryption(enc,shift)
-    print(f"decrypted text:{dec}")
+    print(f"\ndecrypted text:{dec}")
 
     brute_force_ceasar(enc)
     guessed_shifts = frequency_analysis(enc)
-    print(f"Possible shifts: {guessed_shifts}")
+    print(f"\nPossible shifts: {guessed_shifts}")
 
     # try each guessed shift from the list
     for shift in guessed_shifts:
