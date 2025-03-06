@@ -90,6 +90,7 @@ use arrow keys (up and down) to change expected key size.''')
     while True:
         print(chr(27) + "[2J")
         results = guess_key(crypt, buffr, key_length)
+        print(crypt,"\n",buffr,"\n",key_length,"\n",results)
         if auto_increasing:
             if buffr and not results:
                 key_length += 1
