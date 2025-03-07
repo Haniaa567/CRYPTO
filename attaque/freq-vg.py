@@ -2,6 +2,88 @@ import string
 from collections import Counter
 from itertools import product
 
+def add(x,y):
+    if x == "_" or y == "_":
+        return "_"
+    return chr((((ord(x)-65)+(ord(y)-65)) % 26)+65)
+def sub(x,y):
+    if x == "_" or y == "_":
+        return "_"
+    return chr((((ord(x)-65)-(ord(y)-65)) % 26)+65)
+def adds(a,b):
+    return "".join([add(x,y) for (x,y) in zip(a,b)])
+def subs(a,b):
+    return "".join([sub(x,y) for (x,y) in zip(a,b)])
+def encode(text, key):
+    text, key = clean(text), clean(key)
+    ret = ""
+    while len(text) > len(key):
+        ret += adds(text, key)
+        text = text[len(key):]
+    ret += adds(text, key[:len(text)])
+    return ret
+def decode(text, key):
+    text, key = clean(text), clean(key)
+    if len(key)> len(text):
+        key = key[:len(text)]
+    ret = ""
+    while len(text) > len(key):
+        ret += subs(text, key)
+        text = text[len(key):]
+    ret += subs(text, key[:len(text)])
+    return ret
+def clean(text):
+    return "".join(filter(lambda x: x in "ABCDEFGHIJKLMNOPQRSTUVWXYZ_",text.upper()))
+
+def is_repetition(hay, needle):
+    hay, needle = clean(hay), clean(needle)
+    if not hay or not needle:
+        return True
+    return hay[0] == needle[0] and is_repetition(hay[1:], needle[1:] + needle[0])
+def build_key_from_part(keypart, index, length):
+    keypart = clean(keypart)
+    keypart = keypart[:length]
+    keypart = keypart[index:] + "_" * (length-len(keypart)) + keypart[:index]
+    return keypart
+def guess_key(crypt, guess, length=3):
+    '''Returns list of tuples of guesses for given key length'''
+    solutions = []
+    for i in range(len(crypt)-len(guess)+1):
+        crypart = crypt[i:i+len(guess)]
+        keypart = subs(crypart, guess)
+        if len(keypart) > length:
+            if not is_repetition(keypart, keypart[:length]):
+                continue
+        decoded = False
+        for n in range(length):
+            key = build_key_from_part(keypart, (i+n) % length, length)
+            decoded = decode(crypt, key)
+            if guess in decoded:
+                break
+        if decoded and guess in decoded:
+            solutions.append((decoded, key))
+    return solutions
+
+def vig_word():
+    # Exemple: on prend un texte chiffré
+    ciphertext = input("Entrez le texte chiffré (lettres uniquement) : ").strip()
+    ciphertext = preprocess(ciphertext)
+
+    # Suppose qu'on a déjà estimé la longueur de la clé (par ex. 5)
+    key_length = int(input("Longueur de la clé (ex: 5) : "))
+    suspected_word = input("Entrer le mot que tu suspect etre dans le text : ")
+
+    possible_plaintexts = guess_key(ciphertext.upper(), suspected_word, key_length)
+    #print(ciphertext.upper(),"\n",suspected_word,"\n",key_length,"\n",possible_plaintexts)
+
+    if not possible_plaintexts:
+        return "Impossible de deviner le texte clair avec les informations fournies."
+    
+    print("Textes possibles :")
+    for plaintext, key in possible_plaintexts:
+        print("Clé: "+key +" -> Texte clair: "+plaintext)
+
+
 # Alphabet en minuscules
 alphabet = string.ascii_lowercase
 
@@ -188,5 +270,15 @@ def main():
         k, sc, pl = candidates[i]
         print(f"{k:<15} | {sc:<10.2f} | {pl}")
 
+
 if __name__ == "__main__":
-    main()
+    print("Veuillez choisir")
+    print("1.Cryptanalyse Avec la longueur/taille de la clé,")
+    print("2.Cryptanalyse En connaissant un mot du texte clair ")
+    n=int(input())
+    if n==1:
+        main()
+    elif n==2:
+        vig_word()
+    else:
+        print("option invalide")
