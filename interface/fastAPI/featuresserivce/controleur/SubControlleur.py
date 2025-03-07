@@ -59,9 +59,6 @@ class MessageRequest(BaseModel):
     message: str
     key: str
 
-class PasswordRequest(BaseModel):
-    password: str
-
 # Contrôleur pour générer une clé
 async def generate_key() -> dict:
     """Génère une clé aléatoire"""

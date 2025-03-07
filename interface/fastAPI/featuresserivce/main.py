@@ -12,6 +12,7 @@ from routers.encryptRoute import router as encrypt_router
 from routers.attaqueRoute import router as attaque_router
 from routers.hillRoute import router as hill_router
 from routers.subRoute import router as sub_router
+from routers.CesarRoute import router as cesar_router
 from models.fncts import PasswordFeature
 from models.DicModel import Dictionary
 import logging
@@ -67,6 +68,7 @@ app.include_router(encrypt_router, prefix="/encrypt", tags=["encryption"])
 app.include_router(attaque_router, prefix="/attaque", tags=["encryption"])
 app.include_router(hill_router, prefix="/Hill", tags=["encryption"])
 app.include_router(sub_router, prefix="/sub", tags=["encryption"])
+app.include_router(cesar_router, prefix="/caesar", tags=["encryption"])
 @app.get("/")
 async def root():
     return {"message": "Bienvenue dans le Features Service!"}

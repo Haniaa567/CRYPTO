@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from controleur.SubControlleur import generate_key,encrypt_message,decrypt_message,MessageRequest,PasswordRequest
+from controleur.SubControlleur import generate_key,encrypt_message,decrypt_message,MessageRequest
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -13,7 +13,7 @@ async def encrypt_message_route(request: MessageRequest):
     return await encrypt_message(request)
 
 @router.post("/decrypt", response_model=dict)
-async def decrypt_message_route(request: PasswordRequest):
+async def decrypt_message_route(request: MessageRequest):
 
     return await decrypt_message(request)
 
