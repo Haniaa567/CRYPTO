@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+motor
+beanie
+pydantic
+passlib[bcrypt]
+pymongo
+email-validator
+python-multipart
+cryptography==41.0.3
+python-dotenv
+typing
+cors
+python-jose

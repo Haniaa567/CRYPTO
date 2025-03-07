@@ -1,0 +1,398 @@
+
+  .section-2 , .section-3 , .section-4,.section-5,.section-6{
+    position: relative; 
+    min-width: 100%;
+    min-height: 100vh; 
+    background-color: #1B2D1F;
+  }
+  
+  
+  .section-1 {
+    position: relative;
+    min-height: 100vh;
+    min-width: 100%;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
+  }
+  
+  .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    z-index: -1; 
+  }
+  
+  .main-text {
+    position: relative;
+    z-index: 1;
+    color: white;
+    
+  }
+  .serv{
+    display:flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+#slogan-shiny{
+  position: relative;
+  font-size: 2em;
+  letter-spacing: 4px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #0CB074, #fff, #0CB074);
+  background-repeat: no-repeat;
+  background-size: 80%;
+  animation: animate 3s linear 1;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0);
+}
+@keyframes animate {
+  0% {
+    background-position: -500%;
+  }
+  100% {
+    background-position: 500%;
+  }
+}
+#main-slogan{
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5), -2px -2px 5px rgba(0, 0, 0, 0.5);
+}
+.serv-icons{
+  display: flex; /* Enables flexbox */
+  align-items: center; /* Vertically aligns icon and text */
+  gap: 8px;
+}
+.hscroll-line {
+	
+	height: 1px;
+	position: absolute;
+	overflow: hidden;
+  width:40%;
+  bottom: 0px;
+  transform: rotate(90deg);
+  transform-origin:50% 50%;
+  background: linear-gradient(45deg, #ccc, #888, #ccc);
+  background-size: 200% 200%;
+  animation: metallic 1.5s linear infinite;   
+ 
+}
+.hscroll-line1 {
+	
+	height: 1px;
+	position: absolute;
+	overflow: hidden;
+  width:38%;
+  bottom: 0px;
+  right: 17%;
+  transform: rotate(90deg);
+  transform-origin:50% 50%;
+  background: linear-gradient(45deg, #ccc, #888, #ccc);
+  background-size: 200% 200%;
+  animation: metallic 1.5s linear infinite;   
+ 
+}
+.hscroll-line2 {
+	
+	height: 1px;
+	position: absolute;
+	overflow: hidden;
+  width:37%;
+  bottom: 0px;
+  left: 17%;
+  transform: rotate(90deg);
+  transform-origin:50% 50%;
+  background: linear-gradient(45deg, #ccc, #888, #ccc);
+  background-size: 200% 200%;
+  animation: metallic 1.5s linear infinite;   
+ 
+}
+
+
+.hscroll-line::before,
+.hscroll-line::after,.hscroll-line1::before,
+.hscroll-line1::after,.hscroll-line2::before,
+.hscroll-line2::after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	content: ""
+}
+
+.hscroll-line:before,.hscroll-line1:before,.hscroll-line2:before {
+	background: #ffffff3b;
+  
+}
+
+.hscroll-line::after,.hscroll-line1::after,.hscroll-line2::after {
+	background: #24B071;
+  width: 20%;
+	animation: move 3s infinite;
+  box-shadow: 0 0 30px 15px rgba(36, 176, 113, 0.8);
+ 
+}
+
+@keyframes move {
+  0% {
+    transform: translate3d(-100%, 0, 0); 
+    box-shadow: 0 0 10px 5px rgba(36, 176, 113, 0.6); 
+  }
+  50% {
+    transform: translate3d(100%, 0, 0); 
+    box-shadow: 0 0 20px 10px rgba(36, 176, 113, 0.9); 
+  }
+  100% {
+    transform: translate3d(400%, 0, 0); 
+    box-shadow: 0 0 25px 15px rgba(36, 176, 113, 1); 
+  }
+}
+
+.circle {
+  width: 200px;         
+  height: 200px;         
+  border-radius: 50%;    
+  background-color: #3498db;  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 1;
+}
+.circles{
+  margin-top: 100px;
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.section-3 {
+  display: flex;  
+  padding: 20px;
+  
+  
+}
+
+.globe{ 
+  width: 50vw; 
+  height: 100vh; 
+}
+
+.intro-text {
+  flex: 1; 
+  display: flex;
+  align-items: flex-start; /* Align content to the top-left */
+  justify-content:center; 
+  flex-direction: column;
+  gap: 100px;
+  color: #fff;
+  padding: 10px;
+ 
+
+}
+
+/*here the css for glowy border starts its not working*/
+.parag-text {
+  padding:20px;
+  border-radius: 10px;
+  margin:10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  transform: translateY(-5px); 
+  box-shadow: 0 6px 12px rgba(23, 138, 88, 1); 
+ 
+
+}
+
+
+
+
+.intro-text h1{
+  background-color: #2E3E32;
+  font-size: 1.5rem;
+  border-radius: 20px;
+  padding: 15px 40px;
+ 
+
+  
+}
+
+#sec2-title,#sec4-title,#sec5-title,#sec6-title{
+  color: white;
+  text-align: center;
+  padding-top: 70px;
+}
+
+.section-4{
+  padding: 10px;
+}
+#sec4-title {
+  font-size: 2rem; 
+  margin-bottom: 30px; 
+
+}
+
+.services {
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px; 
+  padding: 0 5px;
+}
+
+.service {
+  position: relative;
+  background-color: #2E3E32;  
+  border-radius: 10px;
+  padding: 20px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.service h1 {
+  font-size: 1.5rem; 
+  margin-bottom: 10px; 
+  margin-top: 50px;
+  color: white;
+}
+
+.service p {
+  font-size: 1rem; 
+  margin-top: 40px;
+  color: #666; 
+  line-height: 1.5; 
+}
+.img-center{
+  position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    opacity: 0.5; 
+ 
+}
+.img-serv{
+    position: absolute;
+    top: -20px;
+    right: 0;
+    width: 50%;
+    height: 100%; 
+    opacity: 0.5; 
+}
+
+
+.service:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 6px 12px rgba(23, 138, 88, 1); 
+}
+
+#sec5-title {
+  margin-bottom: 30px; 
+
+}
+.accordion {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px 30px;
+  
+}
+
+.accordion-item {
+  margin-bottom: 10px;
+  border-radius: 30px !important;
+  border: none !important;
+  overflow: hidden;
+
+  
+}
+
+.accordion-header {
+  background-color: #28392C;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  
+  
+}
+
+.accordion-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  
+
+}
+
+.accordion-header span {
+  font-size: 1.5rem;
+  
+  
+}
+
+.accordion-item h3 {
+  font-size: 1.2rem; 
+  color: white;
+  text-align: left;
+}
+.accordion-content {
+  padding: 10px;
+  background-color: #28392C;
+  
+ 
+}
+.accordion-content p{
+  color: white;
+ 
+}
+
+.accordion-icon svg {
+  fill: #0B8854; 
+}
+
+.icons {
+  display: flex;              
+  justify-content: center;    
+  align-items: center;        
+  gap: 30px;                  
+}
+
+.socials-icons {
+  font-size: 200px;            
+  color: #333;               
+  text-decoration: none;      
+  transition: color 0.3s ease; 
+}
+
+.socials-icons:hover {
+  color: #1E6744;            
+}
+
+@media (max-width: 768px) {
+  .socials-icons {
+      font-size: 100px; 
+  }
+
+  .icons {
+      gap: 20px; 
+}
+}
+.footer {
+  background-color: #0B8854; 
+  color: #fff; 
+  padding: 20px 0; 
+  text-align: center; 
+  bottom: 0;
+  min-width: 100%;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 14px;
+}

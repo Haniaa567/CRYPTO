@@ -1,0 +1,7 @@
+react
+react-bootstrap
+react-icons
+three 
+motion-framer
+react-router-dom
+react-scroll

@@ -1,0 +1,123 @@
+.custom-navbar{ 
+    display: flex;
+    justify-self: center;
+    background-color: rgb(71 69 69 / 0.3);
+    gap: 2px;
+    padding: 8px 20px; 
+    border-radius: 1000px;
+   
+   }
+   .header{
+       
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       padding: 5px 15px;
+       z-index: 99;
+      
+       
+      
+   }
+   .custom-navbar a,.links,.services-dropdown{
+       text-decoration: none;
+       color: white;
+       padding: 8px 16px; 
+       border: 2px solid transparent; 
+       box-sizing: border-box; 
+       border-radius: 1000px;
+       font-size: 13px; 
+       transition: background-color 0.3s ease, transform 0.3s ease;
+      
+     }
+
+   .buttons{
+      display: flex;
+      align-items: center;
+      padding-right: 5%;
+      gap: 10px;
+      white-space: nowrap;
+       
+   }
+   .header .Logo img {
+       max-height: 40px; 
+       height: auto;
+       
+     }
+     .header .Logo img:hover{
+      transform: scale(1.1);
+      
+      
+    }
+
+     .custom-navbar a:hover{
+      background: radial-gradient(circle, #8DC988, #2A3A26);
+      transform: scale(1.1);
+     
+    }
+    .services-dropdown:hover{
+      transform: scale(1.1);
+    }
+    
+    .enlarge{
+      display: flex;
+      align-items: center; 
+      gap: 8px;
+      transition: width 0.3s ease-in-out;
+      
+    }
+    .enlarge:hover {
+      transform: scale(1.1);
+    }
+    .services-dropdown:hover .dropdown-menu {
+      display: block; 
+    }
+    .services-dropdown {
+      position: relative;
+     
+    }
+    
+    .services-dropdown .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      display: none; 
+      background-color: #2A3A26; 
+      border-radius: 8px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); 
+      min-width: 200px; 
+    }
+    
+    .services-dropdown .dropdown-menu a {
+      color: white; 
+      padding: 8px 16px;
+      text-decoration: none;
+      display: block;
+      background: none; 
+      border-radius: 0; 
+      transition: none; 
+    }
+    
+    .services-dropdown .dropdown-arrow {
+      margin-left: 8px;
+      transition: transform 0.3s ease; 
+    }
+    
+    .services-dropdown:hover .dropdown-arrow {
+      transform: rotate(180deg); 
+    }
+    
+
+
+    @media (max-width: 900px) {
+      .custom-navbar {
+        display: none; 
+      }
+    }
+
+ 
+    
+   
+
+
+
+  

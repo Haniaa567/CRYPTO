@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  gateway:
+    build:
+      context: ./gateway          # Chemin vers le dossier contenant le Dockerfile pour le Gateway
+    container_name: gateway       # Nom du conteneur
+    ports:
+      - "8000:8000"               # Mappe le port 8000 du conteneur au port 8000 de l'hôte
+    depends_on:
+      - userservice
+      - featureservice
+      - logservice
+    environment:
+      - DATABASE_URL=postgresql://user:password@gateway-db/db_name # Exemple de variable d'environnement
+
+  userservice:
+    build:
+      context: ./userservice      # Chemin vers le dossier contenant le Dockerfile pour le service utilisateur
+    container_name: userservice
+    ports:
+      - "8001:8000"               # Mappe le port 8000 du conteneur au port 8001 de l'hôte
+    depends_on:
+      - db                        # Ce service dépend de la base de données
+    environment:
+      - DATABASE_URL=postgresql://user:password@userservice-db/db_name
+
+  featureservice:
+    build:
+      context: ./featureservice   # Chemin vers le dossier contenant le Dockerfile pour le service des fonctionnalités
+    container_name: featureservice
+    ports:
+      - "8002:8000"               # Mappe le port 8000 du conteneur au port 8002 de l'hôte
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://user:password@featureservice-db/db_name
+
+  logservice:
+    build:
+      context: ./logservice       # Chemin vers le dossier contenant le Dockerfile pour le service de logs
+    container_name: logservice
+    ports:
+      - "8003:8000"               # Mappe le port 8000 du conteneur au port 8003 de l'hôte
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://user:password@logservice-db/db_name
+
+  db:
+    image: postgres:15            # Utilise une image PostgreSQL officielle
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: user         # Nom d'utilisateur pour PostgreSQL
+      POSTGRES_PASSWORD: password # Mot de passe pour PostgreSQL
+      POSTGRES_DB: db_name        # Nom de la base de données
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:                        # Volume pour stocker les données persistantes de PostgreSQL
