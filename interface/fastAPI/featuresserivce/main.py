@@ -14,6 +14,7 @@ from routers.hillRoute import router as hill_router
 from routers.subRoute import router as sub_router
 from routers.CesarRoute import router as cesar_router
 from routers.affineRoute import router as affine_router
+from routers.kasiskiRoute import router as kasiski_router
 from models.fncts import PasswordFeature
 from models.DicModel import Dictionary
 import logging
@@ -71,6 +72,7 @@ app.include_router(hill_router, prefix="/Hill", tags=["encryption"])
 app.include_router(sub_router, prefix="/sub", tags=["encryption"])
 app.include_router(cesar_router, prefix="/caesar", tags=["encryption"])
 app.include_router(affine_router, prefix="/affine", tags=["encryption"])
+app.include_router(kasiski_router, prefix="/KS", tags=["encryption"])
 @app.get("/")
 async def root():
     return {"message": "Bienvenue dans le Features Service!"}
