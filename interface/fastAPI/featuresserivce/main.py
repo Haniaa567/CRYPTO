@@ -11,14 +11,15 @@ from routers.fnctsRoute import router as feature_router
 from routers.encryptRoute import router as encrypt_router
 from routers.attaqueRoute import router as attaque_router
 from routers.hillRoute import router as hill_router
+from routers.subRoute import router as sub_router
 from models.fncts import PasswordFeature
 from models.DicModel import Dictionary
 import logging
 
 load_dotenv()
 # Configuration du logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+#logging.basicConfig(level=logging.INFO)
+#logger = logging.getLogger(__name__)
 app = FastAPI(title="Features Service")
 
 # Configurer les CORS
@@ -65,6 +66,7 @@ app.include_router(feature_router, prefix="/features", tags=["Features"])
 app.include_router(encrypt_router, prefix="/encrypt", tags=["encryption"])
 app.include_router(attaque_router, prefix="/attaque", tags=["encryption"])
 app.include_router(hill_router, prefix="/Hill", tags=["encryption"])
+app.include_router(sub_router, prefix="/sub", tags=["encryption"])
 @app.get("/")
 async def root():
     return {"message": "Bienvenue dans le Features Service!"}
