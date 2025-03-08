@@ -1,0 +1,66 @@
+COUNTER IT WAS 7 MINUTES AFTER MIDNIGHT THE DOG WAS LYING ON THE GRASS IN 
+THE MIDDLE OF THE LAWN IN FRONT OF MRS SHEARS HOUSE ITS EYES WERE CLOSED IT 
+LOOKED AS IF IT WAS RUNNING ON ITS SIDE THE WAY DOGS RUN WHEN THEY THINK 
+THEY ARE CHASING A CAT IN A DREAM BUT THE DOG WAS NOT RUNNING OR ASLEEP THE 
+DOG WAS DEAD THERE WAS A GARDEN FORK STICKING OUT OF THE DOG THE POINTS OF 
+THE FORK MUST HAVE GONE ALL THE WAY THROUGH THE DOG AND INTO THE GROUND 
+BECAUSE THE FORK HAD NOT FALLEN OVER I DECIDED THAT THE DOG WAS PROBABLY 
+KILLED WITH THE FORK BECAUSE I COULD NOT SEE ANY OTHER WOUNDS IN THE DOG AND 
+I DO NOT THINK YOU WOULD STICK A GARDEN FORK INTO A DOG AFTER IT HAD DIED FOR 
+SOME OTHER REASON LIKE CANCER FOR EXAMPLE OR A ROAD ACCIDENT BUT I COULD NOT BE
+ CERTAIN ABOUT THIS
+I WENT THROUGH MRS SHEARS GATE CLOSING IT BEHIND ME I WALKED ONTO HER LAWN AND 
+KNELT BESIDE THE DOG I PUT MY HAND ON THE MUZZLE OF THE DOG IT WAS STILL WARM
+THE DOG WAS CALLED WELLINGTON IT BELONGED TO MRS SHEARS WHO WAS OUR FRIEND SHE
+LIVED ON THE OPPOSITE SIDE OF THE ROAD TWO HOUSES TO THE LEFT
+WELLINGTON WAS A POODLE NOT ONE OF THE SMALL POODLES THAT HAVE HAIRSTYLES BUT A 
+BIG POODLE IT HAD CURLY BLACK FUR BUT WHEN YOU GOT CLOSE YOU COULD SEE THAT THE 
+SKIN UNDERNEATH THE FUR WAS A VERY PALE YELLOW LIKE CHICKEN
+I STROKED WELLINGTON AND WONDERED WHO HAD KILLED HIM AND WHY
+I PULLED THE FORK OUT OF THE DOG AND LIFTED HIM INTO MY ARMS AND HUGGED HIM HE WAS LEAKING BLOOD FROM THE FORKHOLES
+I LIKE DOGS YOU ALWAYS KNOW WHAT A DOG IS THINKING IT HAS FOUR MOODS HAPPY SAD CROSS AND CONCENTRATING ALSO DOGS ARE FAITHFUL AND THEY DO NOT TELL LIES BECAUSE THEY CANNOT TALK
+I HAD BEEN HUGGING THE DOG FOR 4 MINUTES WHEN I HEARD SCREAMING I LOOKED UP AND SAW MRS SHEARS RUNNING TOWARDS ME FROM THE PATIO SHE WAS WEARING PYJAMAS AND A HOUSECOAT HER TOENAILS WERE PAINTED BRIGHT PINK AND SHE HAD NO SHOES ON
+SHE WAS SHOUTING WHAT IN FUCKS NAME HAVE YOU DONE TO MY DOG
+I DO NOT LIKE PEOPLE SHOUTING AT ME IT MAKES ME SCARED THAT THEY ARE GOING TO HIT ME OR TOUCH ME AND I DO NOT KNOW WHAT IS GOING TO HAPPEN
+LET GO OF THE DOG SHE SHOUTED LET GO OF THE FUCKING DOG FOR CHRISTS SAKE
+I PUT THE DOG DOWN ON THE LAWN AND MOVED BACK 2 METRES
+SHE BENT DOWN I THOUGHT SHE WAS GOING TO PICK THE DOG UP HERSELF BUT SHE DIDNT PERHAPS SHE NOTICED HOW MUCH BLOOD THERE WAS AND DIDNT WANT TO GET DIRTY INSTEAD SHE STARTED SCREAMING AGAIN
+I PUT MY HANDS OVER MY EARS AND CLOSED MY EYES AND ROLLED FORWARD TILL I WAS HUNCHED UP WITH MY FOREHEAD PRESSED ONTO THE GRASS THE GRASS WAS WET AND COLD IT WAS NICE
+Sample text in English is utilized in a variety of fields, helping to streamline processes, ensure readability, and provide a visual idea of how the final content will appear. Below are some key areas where it’s commonly used:
+Graphic designers and publishers often use sample text to test layouts and ensure that the design works well with the content. Whether it’s a website, brochure, or book, sample text helps in assessing how readable the content will be once the final text is added.
+In web development, developers use sample text to see how text blocks will look within the layout. This is particularly useful when creating templates, ensuring the design is responsive and readable across various screen sizes.
+Cryptography is the process of hiding or coding information so that only the person a message was intended for can read it. The art of cryptography has been used to code messages for thousands of years and continues to be used in bank cards, computer passwords, and ecommerce.
+A common cryptography definition is the practice of coding information to ensure only the person that a message was written for can read and process the information. This cybersecurity practice, also known as cryptology, combines various disciplines like computer science, engineering, and mathematics to create complex codes that hide the true meaning of a message.
+Cryptography can be traced all the way back to ancient Egyptian hieroglyphics but remains vital to securing communication and information in transit and preventing it from being read by untrusted parties. It uses algorithms and mathematical concepts to transform messages into difficult-to-decipher codes through techniques like cryptographic keys and digital signing to protect data privacy, credit card transactions, email, and web browsing.
+Cryptography remains important to protecting data and users, ensuring confidentiality, and preventing cyber criminals from intercepting sensitive corporate information. Common uses and examples of cryptography include the following:
+Integrity
+Similar to how cryptography can confirm the authenticity of a message, it can also prove the integrity of the information being sent and received. Cryptography ensures information is not altered while in storage or during transit between the sender and the intended recipient. For example, digital signatures can detect forgery or tampering in software distribution and financial transactions.
+Nonrepudiation
+Cryptography confirms accountability and responsibility from the sender of a message, which means they cannot later deny their intentions when they created or transmitted information. Digital signatures are a good example of this, as they ensure a sender cannot claim a message, contract, or document they created to be fraudulent. Furthermore, in email nonrepudiation, email tracking makes sure the sender cannot deny sending a message and a recipient cannot deny receiving it.
+Secret key cryptography, also known as symmetric encryption, uses a single key to encrypt and decrypt a message. The sender encrypts the plaintext message using the key and sends it to the recipient who then uses the same key to decrypt it and unlock the original plaintext message.
+Stream ciphers work on a single bit or byte at any time and constantly change the key using feedback mechanisms. A self-synchronizing stream cipher ensures the decryption process stays in sync with the encryption process by recognizing where it sits in the bit keystream. A synchronous stream cipher generates the keystream independently of the message stream and generates the same keystream function at both the sender and the receiver.
+Block ciphers encrypt one block of fixed-size data at a time. It will always encrypt a plaintext data block to the same ciphertext when the same key is used. A good example of this is the Feistel cipher, which uses elements of key expansion, permutation, and substitution to create vast confusion and diffusion in the cipher. 
+Keys are essentially random numbers that become more difficult to crack the longer the number is. Key strength and length need to be relative to the value of the data it protects and the length of time that data needs to be protected. Keys should be created with a high-quality, certified random number generator that collects entropy—the information density of a file in bits or characters—from suitable hardware noise sources.
+Organizations and individuals can minimize and mitigate cryptography-related threats with a dedicated electronic key management system from a reputable provider. The solution must use a hardware security module to generate and protect keys, and underpin the entire system’s security. 
+Hiding some data is known as encryption. When plain text is encrypted it becomes unreadable and is known as ciphertext. In a Substitution cipher, any character of plain text from the given fixed set of characters is substituted by some other character from the same set depending on a key. For example with a shift of 1, A would be replaced by B, B would become C, and so on. 
+The most common method of substitution replaces the 26 letters of the alphabet (one letter matches only one other). dCode has a dedicated tool for this:
+Substitution encryption consists, as its name suggests, of substituting (replacing) one element with another. In the case of a text, it is a question of replacing the characters (often letters) of the message by others.
+For a substitution to be correct, it is necessary for the same element to be substituted by only one other (valid in both cases, for encryption and decryption) so that there is never more than one possibility of encryption or decryption.
+The condition for a successful substitution decryption is to know the correspondence lookup table used.
+If the substitution is a simple transcription, then the frequency analysis can quickly recognize the language of the plain message.
+If the substitution is more complex, it may become impossible to recognize the encryption.
+Substitution cipher is one of the most basic cryptography methods. Many variations are possible:
+Ciphers by mono-alphabetic substitution, with a disordered alphabet, one letter replaces another.
+Encryptions by poly-alphabetic substitution, with several alphabets.
+encryptions by homophonic substitution, the same element can be substituted by several others.
+Substitution by dictionary, with words, n-grams substituted by others.
+Simple substitution is a method often used by children in their first experiments with secret code. A substitution cipher merely substitutes different letters, numbers, or other characters for each character in the original text. The most straightforward example is a simplistic substitution in which each letter of the alphabet is represented by a numerical digit, starting with 1 for A. The message goodbye then becomes 7-15-15-4-2-25-5. This code is obviously extremely easy to break.
+The Caesar Cipher used a simple shifting method, in which each letter of the message is represented by the letter two places to the right in the alphabet (A becomes C, B becomes D, and so on). Other substitution methods can be much more difficult to crack. For example, if two parties exchanging communications have an identical copy of a particular book, they might create a message by referencing page, line, and word numbers (for example, 73-12-6 tells you that the word in the message is the same as the sixth word in the twelfth line on page 72 of the code book). In this case, anyone who doesn't have a copy of the book (and to cite the correct pages, it must be the exact same edition and print run) will not be able to decipher the message.
+Some types of substitution ciphers are:
+Monoalphabetic substitution Each letter is represented by another letter or character in a one-to-one relationship.
+Polyalphabetic substitution Different cipher-text characters can represent the same plain-text letter, making it more difficult to decrypt messages using the frequency analysis technique. Renaissance architect and art theorist Leon Battista Alberti is credited with developing this technique, earning him recognition as the “father of Western cryptography.”
+Polygraphic (block) cipher Several letters (or digits when we're dealing with binary data) are encrypted at the same time, using a system that can handle all the possible combinations of a set number of characters.
+Fractionation Multiple symbols are substituted for each plain-text letter, and then the letters or digits are transposed.
+In this method, each letter of the message is replaced with a single character. Table 3.1 shows an example of a substitution cipher. Because some letters appear more often and certain words are used more than others, some ciphers are extremely easy to decrypt and can be deciphered at a glance by more practiced cryptologists.
+Cryptography should be considered for data that is sensitive, has a high value, or is vulnerable to unauthorized disclosure or undetected modification during transmission or while in storage. Cryptographic methods provide important functionality to protect against intentional and accidental compromise and alteration of data. Some cryptographic mechanisms support confidentiality during communications by encrypting the communication before transmission and decrypting it at receipt. These methods also provide file/data confidentiality by encrypting the data before placement on a storage medium and decrypting it after retrieval from the storage medium. Other cryptographic mechanisms, such as message authentication codes and digital signatures, provide data content integrity and source authentication services. That is, the cryptographic mechanisms permit the user to determine that the entity claiming to be the source of data really is the source and to show whether information has been modified since it was last authenticated or signed by its source. Thus, this chapter provides guidance as a primer on how to select cryptographic controls for protecting sensitive information.
+
