@@ -102,7 +102,7 @@ key_caesar, decrypted_caesar = decrypt_caesar(encrypted_text)
 print("Clé César trouvée:", key_caesar)
 print("Texte déchiffré César:", decrypted_caesar)
 
-encrypted_vigenere = "twdpwy hm ohjdl zmuam ll evmth"
+encrypted_vigenere = "dlcdikzipkxsbigchpytnsrebenshjieqdlccylcircfcrmlnxfohgcxyxxkyyldegxwjoetsredlccowzegxxcnagdlqrebowmpspkreoelntsbtjoxfogmvhusrbglgcxjowrrvmekfdlcdvcowabiydmlqecovgowmerbkwgdvscxjowrridkpjorjoetow"
 key_length = find_vigenere_key_length(encrypted_vigenere)
 key_vigenere = detect_vigenere_key(encrypted_vigenere, key_length)
 decrypted_vigenere = decrypt_vigenere(encrypted_vigenere, key_vigenere)
@@ -110,6 +110,6 @@ print("Longueur clé Vigenère:", key_length)
 print("Clé Vigenère trouvée:", key_vigenere)
 print("Texte déchiffré Vigenère:", decrypted_vigenere)
 
-encrypted_substitution = "QEB NRFZH YOLTK CLU GRJMP LSBO QEB IXWV ALD"
+encrypted_substitution = "LMJLJIRJPCLXPJOGYPBRROTAPCROYVKCGLMJGXTGJLGWJMOTYLMJYOGLCTLIBXTLCOTGVJCNOTALMJGFKRCOTLJYDOLMGMCYJGBEBPCTAJCTYRXPRVJLMJSBVYDOTYDMOGLVJGLMPBXAMLMJLPJJGSPJCLOTACJJPOJGBXTYCGOLPXGLVJGLMJECVVJTVJCNJG"
 decrypted_substitution = decrypt_substitution(encrypted_substitution)
 print("Texte déchiffré Substitution:", decrypted_substitution)
