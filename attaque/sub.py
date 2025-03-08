@@ -1,10 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jan 10 19:06:30 2024
 
-@author: bishopibrahim
-"""
 
 #math is imported for the logarithm function, random is imported for use by the genetic algorihtm, and io is imported for file handling purposes.
 import math
@@ -24,7 +18,8 @@ class Organism():
         self.listOfStandardDistributions = listOfStandardDistributions
         self.listOfNgramSizes = listOfNgramSizes
         self.ngramFitnessWeights = ngramFitnessWeights
-    
+        
+    #Lit un fichier et extrait uniquement les lettres (sans ponctuation ni espaces).
     def initiateCiphertext(self):
         ciphertextFile = open(self.ciphertextPath, "r")
         self.ciphertext = ""
@@ -42,6 +37,9 @@ class Organism():
             listOfMaps.append(genNgrams(text, n))
         return listOfMaps
     
+    
+    '''Crée une table de correspondance entre cipherGuess et l’alphabet standard.
+    Remplace les lettres du texte chiffré selon cette correspondance.'''
     def imageCiphertext(self): #Updates decryption guess with current key
         image = ""
         cipherMap = {}
@@ -54,6 +52,7 @@ class Organism():
                 image += letter
         self.plaintextGuess = image
     
+    #Effectue un échange aléatoire de lettres dans cipherGuess pour explorer de nouvelles solutions.
     def randomMutate(self, n=1):
         for i in range(0, n):
             a = random.randint(0, 25)
@@ -63,6 +62,9 @@ class Organism():
             newGuess = "".join(letterList)  
             self.cipherGuess = newGuess
 
+    '''Compare la fréquence des n-grammes du texte déchiffré avec un modèle statistique basé sur du texte clair.
+    Utilise log2 pour éviter les effets des petites fréquences.
+    Retourne une "fitness" : plus elle est élevée, plus le déchiffrement est plausible.'''
     def evaluateLogarithmicFitness(self, listOfStandardDistributions):
         listOfFitnessesByNgram = []
         for i in range(0, len(listOfStandardDistributions)):
@@ -161,7 +163,10 @@ class Environment():
             candidate.randomizeGuess()
             candidate.imageCiphertext()
             self.populationList.append(candidate)
-    
+            
+            
+    '''Fait évoluer la population en gardant le meilleur et en créant de nouvelles mutations.
+    Si la fitness n’améliore plus après threshold générations, l’algorithme s’arrête.'''
     def solve(self):
         self.populate()
         previousMaxFitness = 0
