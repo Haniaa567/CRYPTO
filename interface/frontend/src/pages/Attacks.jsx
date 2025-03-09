@@ -1,621 +1,276 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Swiper from 'swiper';
-import 'swiper/css';
+import React, { useState } from 'react';
 import Navbar2 from '../components/Navbar/Navbar2';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import '../styles/Services.css';
-import { VscDebugRestart } from "react-icons/vsc";
-import Spinner from 'react-bootstrap/Spinner';
-import { useKeycloak } from '@react-keycloak/web';
-import { useTranslation } from 'react-i18next';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+const CardComponent = () => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [visibleMatrices, setVisibleMatrices] = useState({
+    matrix1: false,
+    matrix2: false,
+    matrix3: false
+  });
 
-function Page1() {
-  const { keycloak } = useKeycloak();
-  const swiperRef = useRef(null);
-  const prevButtonRef = useRef(null);
-  const nextButtonRef = useRef(null);
-   const { t } = useTranslation();
-
-  const [flippedCardId, setFlippedCardId] = useState(null);
-  const [clickedCardId, setClickedCardId] = useState(null);
-  const [canFlip, setCanFlip] = useState(true);
-  const [showHashMethod, setShowHashMethod] = useState(false); // État pour afficher le champ de sélection
-  const [selectedHashMethod, setSelectedHashMethod] = useState('md5'); // Par défaut, md5 est sélectionné
-  const [loading, setLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [inputValue, setInputValue] = useState(""); // To manage the input value
-  const [saltValue, setSaltValue] = useState("");
-
-  const getUserId = () => {
-    return keycloak.tokenParsed?.sub || '';
-  };
-  const handleCardClick = (id, event) => {
-    // Prevent flipping if canFlip is false (disabling flip on back)
-    if (!canFlip) return;
-
-    event.stopPropagation(); // Prevent the card flip when clicking the card itself
-
-    if (clickedCardId === id) {
-      setClickedCardId(null); // If the same card is clicked again, unblur all
-    } else {
-      setClickedCardId(id); // Set the clicked card
-    }
-    setFlippedCardId(flippedCardId === id ? null : id); // Flip the card
+  const flipCard = (e) => {
+    setIsFlipped(!isFlipped);
   };
 
-  // Handle clicks outside the card to flip it back, unless disabled
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        flippedCardId &&
-        !event.target.closest('.back') && // Check if the click is outside the card
-        !event.target.closest('.swiper-button-prev') && // Check if the click is outside the prev button
-        !event.target.closest('.swiper-button-next') && // Check if the click is outside the next button
-        canFlip === false // Ensure that the flip is disabled
-      ) {
-        setFlippedCardId(null); // Flip the card back
-        setClickedCardId(null);
-      }
-    };
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
 
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [flippedCardId, canFlip]); // Depend on flippedCardId and canFlip
-
-  useEffect(() => {
-    const swiper = new Swiper('.swiper', {
-        effect: 'coverflow',
-        loop:true,
-      slidesPerView: 3,
-      spaceBetween: 10,
-      navigation: {
-        nextEl: nextButtonRef.current,
-        prevEl: prevButtonRef.current,
-      },
+  const toggleMatrix = (matrixId, isChecked) => {
+    setVisibleMatrices({
+      ...visibleMatrices,
+      [matrixId]: isChecked
     });
-
-    const handlePrevClick = () => {
-      swiper.slidePrev();
-    };
-
-    const handleNextClick = () => {
-      swiper.slideNext();
-    };
-
-    if (prevButtonRef.current) {
-      prevButtonRef.current.addEventListener('click', handlePrevClick);
-    }
-    if (nextButtonRef.current) {
-      nextButtonRef.current.addEventListener('click', handleNextClick);
-    }
-
-    return () => {
-      if (prevButtonRef.current) {
-        prevButtonRef.current.removeEventListener('click', handlePrevClick);
-      }
-      if (nextButtonRef.current) {
-        nextButtonRef.current.removeEventListener('click', handleNextClick);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (flippedCardId) {
-      setCanFlip(false); // Disable flip-back when the card is flipped
-    } else {
-      setCanFlip(true); // Enable flip-back when the card is not flipped
-    }
-  }, [flippedCardId]);
-
-  const handleIconClick = () => {
-    // Reset the input and button after clicking the icon
-    setInputValue(""); // Reset hashed password input
-    setSaltValue(""); // Reset salt input
-    setResponseMessage(""); // Clear response message
-    setResponseMessage2(""); // Clear response message
-    setResponseMessage3(""); // Clear response message
-    setResponseMessage4(""); // Clear response message
-    setIsSubmitted(false); // Reset submission state
-    setLoading(false); // Reset loading state
   };
 
-  const handleHashMethodChange = (e) => {
-    setSelectedHashMethod(e.target.value); // Mettre à jour la méthode sélectionnée
+  const lancerOperation = (e) => {
+    e.stopPropagation();
+    alert("Opération lancée !");
+    // Ajoutez ici votre code pour traiter les données
   };
 
-  const [responseMessage, setResponseMessage] = useState(""); // Initialise le message de réponse
- 
-  const handleSubmitbrutforce = async () => {
-    // Vérifier d'abord l'authentification
-    if (!keycloak.authenticated) {
-      console.log("User not authenticated");
-      keycloak.login(); // Rediriger vers la page de login si non authentifié
-      return;
-    }
-  
-    try {
-      setIsSubmitted(true);
-      setLoading(true);
-  
-      // Récupérer les valeurs des inputs
-      const hashedPassword = document.getElementById(`hash-${flippedCardId}`).value;
-      const salt = document.getElementById(`salt-${flippedCardId}`).value;
-  
-      // Préparer le corps de la requête
-      const requestBody = {
-        hashed_password: hashedPassword,
-        hash_algorithm: selectedHashMethod,
-        enregistrement: true, // Par défaut, remplacez si nécessaire
-        iduser:getUserId(), // Remplacez par un ID utilisateur réel
-        ...(salt && { salt }) // Ajouter le salt uniquement s'il existe
-      };
-  
-      // Faire l'appel à l'API de bruteforce
-      const bruteforceResponse = await fetch('http://127.0.0.1:8001/attaque/bruteForce', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${keycloak.token}` // Ajouter le token ici aussi si nécessaire
-        },
-        body: JSON.stringify(requestBody)
-      });
-  
-      if (!bruteforceResponse.ok) {
-        const errorText = await bruteforceResponse.text();
-        console.error('Response error:', errorText);
-        throw new Error(`HTTP error! status: ${bruteforceResponse.status}, message: ${errorText}`);
-      }
-  
-      const data = await bruteforceResponse.json();
-      
-      // Traiter la réponse
-      if (data.success) {
-        setResponseMessage(`Your password is : ${data.password_found}`);
-      } else {
-        setResponseMessage("Password not found !");
-      }
-  
-    } catch (error) {
-      console.error('Error:', error);
-      setResponseMessage("An error occurred during the request!");
-    } finally {
-      setLoading(false);
-    }
-  };
-  const [responseMessage2, setResponseMessage2] = useState(""); // Initialise le message de réponse
-  const handleSubmitDictionnary = async () => {
-    // Vérifier d'abord l'authentification
-    if (!keycloak.authenticated) {
-      console.log("User not authenticated");
-      keycloak.login(); // Rediriger vers la page de login si non authentifié
-      return;
-    }
-    try {
-      setIsSubmitted(true);
-      setLoading(true);
-      const hashedPassword = document.getElementById(`hash-${flippedCardId}`).value;
-      const salt = document.getElementById(`salt-${flippedCardId}`).value;
-    
-      const requestBody = {
-        hashed_password: hashedPassword,
-        hash_algorithm: selectedHashMethod,
-        enregistrement: true, // Par défaut, remplacez si nécessaire
-        iduser:getUserId(), // Remplacez par un ID utilisateur réel
-      };
-    
-      if (salt) {
-        requestBody.salt = salt; // Ajouter le champ "salt" uniquement s'il est rempli
-      }
-    
-      const dic = await fetch('http://127.0.0.1:8001/attaque/Dictionnaire', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${keycloak.token}` // Ajouter le token ici aussi si nécessaire
-
-        },
-        body: JSON.stringify(requestBody),
-      })
-      if (!dic.ok) {
-        const errorText = await dic.text();
-        console.error('Response error:', errorText);
-        throw new Error(`HTTP error! status: ${dic.status}, message: ${errorText}`);
-      }
-  
-      const data = await dic.json();
-      
-      // Traiter la réponse
-      if (data.success) {
-        setResponseMessage2(`Your password is : ${data.password_found}`);
-      } else {
-        setResponseMessage2("Password not found !");
-      }
-      } catch (error) {
-        console.error('Error:', error);
-        setResponseMessage2("An error occurred during the request!");
-      } finally {
-        setLoading(false);
-      }
-  };
-
-
-  const [responseMessage3, setResponseMessage3] = useState(""); // Initialise le message de réponse
-  const handleSubmitImprovedDictionnary = async() => {
-    // Vérifier d'abord l'authentification
-    if (!keycloak.authenticated) {
-      console.log("User not authenticated");
-      keycloak.login(); // Rediriger vers la page de login si non authentifié
-      return;
-    }
-  
-    try {
-      setIsSubmitted(true);
-      setLoading(true);
-      const hashedPassword = document.getElementById(`hash-${flippedCardId}`).value;
-      const salt = document.getElementById(`salt-${flippedCardId}`).value;
-    
-      const requestBody = {
-        hashed_password: hashedPassword,
-        hash_algorithm: selectedHashMethod,
-        enregistrement: true, // Par défaut, remplacez si nécessaire
-        iduser:getUserId(), // Remplacez par un ID utilisateur réel
-        ...(salt && { salt }) // Ajouter le salt uniquement s'il existe
-      };
-
-    
-      const dicAm = await fetch('http://127.0.0.1:8001/attaque/DictionnaireAmeliorer', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${keycloak.token}` // Ajouter le token ici aussi si nécessaire
-
-        },
-        body: JSON.stringify(requestBody),
-      })
-      if (!dicAm.ok) {
-        const errorText = await dicAm.text();
-        console.error('Response error:', errorText);
-        throw new Error(`HTTP error! status: ${dicAm.status}, message: ${errorText}`);
-      }
-  
-      const data = await dicAm.json();
-      
-      // Traiter la réponse
-      if (data.success) {
-        setResponseMessage3(`Your password is : ${data.password_found}`);
-      } else {
-        setResponseMessage3("Password not found !");
-      }
-      } catch (error) {
-        console.error('Error:', error);
-        setResponseMessage3("An error occurred during the request!");
-      } finally {
-        setLoading(false);
-      }
-  };
-
-  const [responseMessage4, setResponseMessage4] = useState(""); // Initialise le message de réponse
-  const handleSubmitHybrid = async() => {
-    // Vérifier d'abord l'authentification
-    if (!keycloak.authenticated) {
-      console.log("User not authenticated");
-      keycloak.login(); // Rediriger vers la page de login si non authentifié
-      return;
-    }
-    try {
-      setIsSubmitted(true);
-      setLoading(true);
-      const hashedPassword = document.getElementById(`hash-${flippedCardId}`).value;
-      const salt = document.getElementById(`salt-${flippedCardId}`).value;
-    
-      const requestBody = {
-        hashed_password: hashedPassword,
-        hash_algorithm: selectedHashMethod,
-        enregistrement: true, // Par défaut, remplacez si nécessaire
-        iduser:getUserId(), // Remplacez par un ID utilisateur réel
-        ...(salt && { salt }) // Ajouter le salt uniquement s'il existe
-      };
-    
-    
-      const hybrid =await fetch('http://127.0.0.1:8001/attaque/hybrid', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${keycloak.token}` // Ajouter le token ici aussi si nécessaire
-        },
-        body: JSON.stringify(requestBody),
-      })
-      if (!hybrid.ok) {
-        const errorText = await hybrid.text();
-        console.error('Response error:', errorText);
-        throw new Error(`HTTP error! status: ${hybrid.status}, message: ${errorText}`);
-      }
-  
-      const data = await hybrid.json();
-      
-      // Traiter la réponse
-      if (data.success) {
-        setResponseMessage4(`Your password is : ${data.password_found}`);
-      } else {
-        setResponseMessage4("Password not found !");
-      }
-      } catch (error) {
-        console.error('Error:', error);
-        setResponseMessage4("An error occurred during the request!");
-      } finally {
-        setLoading(false);
-      }
-  };
-
-
-  
   return (
-    <div id="Attacks">
+  <div className="Attack">
       <div className="navbar-container">
-        <Navbar2 />
+          <Navbar2 /> 
       </div>
-
-      <div className="swiper-container">
-        <div className="swiper">
-          <div className="swiper-wrapper">
-            {/* Card 1 */}
-            <div
-              className={`swiper-slide ${
-                flippedCardId === '1' ? 'flipped' : ''
-              } ${clickedCardId && clickedCardId !== '1' ? 'blurry' : ''} ${
-                clickedCardId === '1' ? 'selected' : ''
-              }`}
-              onClick={(e) => handleCardClick('1', e)}
-            >
-              <div className="slide-content">
-                <div className="front">
-                  <div className="about">
-                    <h1 className="front-title">{t('brute-force')}</h1>
-                    <h1 id="ab">{t('about')}</h1>
-                    <p>
-                      {t('brute-force-desc')}
-                    </p>
-                  </div>
-                </div>
-                <div className="back">
-                  <div className="input-content">
-                    <h1 id="attack-title">{t('brute-force')}</h1>
-                    <input
-                      type="text"
-                      id="hash-1"
-                      placeholder={t('hash-placeholder')}
-                      value={inputValue} 
-                      onChange={(e) => setInputValue(e.target.value)} 
-                    />
-                    <h1 id="salt-title">Salt</h1>
-                    <input
-                      type="text"
-                      id="salt-1"
-                      placeholder={t('salt-placeholder')}
-                      value={saltValue} // Bind to salt input state
-                      onChange={(e) => setSaltValue(e.target.value)} 
-                    />
-                        <select 
-                          value={selectedHashMethod}
-                          onChange={handleHashMethodChange}
-                          className='select-attacks'
-                        >
-                          <option value="md5">MD5</option>
-                          <option value="sha256">SHA-256</option>
-                          <option value="sha1">SHA-1</option>
-                        </select>
-                        {!isSubmitted && !loading && (
-                        <button  onClick={(e) => {e.stopPropagation(); handleSubmitbrutforce()}}>
-                             {t('attack-btn')}</button>
-                        )}  
-                        {/* Message de réponse */}
-                        {loading ? (
-                        <div className="response-message">
-                            <Spinner animation="border" variant="success" size='sm' /> {/* Show loading message while request is being processed */}
-                        </div>
-                        ) : (
-                        <div className="response-message">
-
-                            <p>{responseMessage}</p>
-                            {responseMessage && !loading && (
-                            <VscDebugRestart style={{ fontSize: "20px", cursor: "pointer" }} onClick={(e) => {e.stopPropagation();handleIconClick()} }/>
-                            )}
-                            
-                        </div>
-                        )}
-                  </div>
-                </div>
+    <div className="card-container">
+      <div className={`card ${isFlipped ? 'flipped' : ''}`}>
+        <div className="card-front" onClick={flipCard}>
+          <h2 className="card-title">Cliquez pour retourner la carte</h2>
+        </div>
+        <div className="card-back" onClick={flipCard}>
+          <h2 className="card-title">Information</h2>
+          <textarea 
+            className="large-textarea" 
+            placeholder="Entrez votre texte ici..." 
+            onClick={stopPropagation}
+          />
+          
+          <div className="checkbox-container">
+            <div className="checkbox-item">
+              <div className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  id="key1" 
+                  onChange={(e) => toggleMatrix('matrix1', e.target.checked)} 
+                  onClick={stopPropagation}
+                />
+                <label htmlFor="key1">Clé 1</label>
+              </div>
+              <div className={`matrix-container ${visibleMatrices.matrix1 ? 'visible' : ''}`}>
+                <input type="text" className="matrix-input" placeholder="Valeur 1" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 2" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 3" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 4" onClick={stopPropagation} />
               </div>
             </div>
-
-            {/* Card 2 */}
-
-            <div
-              className={`swiper-slide ${flippedCardId === '2' ? 'flipped' : ''} 
-                ${clickedCardId && clickedCardId !== '2' ? 'blurry' : ''} 
-                ${clickedCardId === '2' ? 'selected' : ''}`}
-              onClick={(e) => handleCardClick('2', e)} // Pass the event to prevent propagation
-            >
-              <div className="slide-content">
-                <div className="front">
-                <div className='about'>
-                    <h1 className='front-title'>{t('dictionary')}</h1>
-                    <h1  id='ab'>{t('about')}</h1>
-                    <p>
-                    
-                   {t('dictionary-desc')}
-                    </p>
-                  </div>
-                </div>
-                <div className="back"><div className="input-content"> 
-                    <h1 id='attack-title'>{t('dictionary')}</h1>
-                    <input type="text"  id='hash-2' placeholder={t('hash-placeholder')} value={inputValue} 
-                      onChange={(e) => setInputValue(e.target.value)} />
-                    <h1 id='salt-title'>Salt</h1>
-                    <input type="text" id='salt-2' placeholder={t('salt-placeholder')} value={saltValue} 
-                      onChange={(e) => setSaltValue(e.target.value)} />
-                    <select 
-                          value={selectedHashMethod}
-                          onChange={handleHashMethodChange}
-                          className='select-attacks'
-                        >
-                          <option value="md5">MD5</option>
-                          <option value="sha256">SHA-256</option>
-                          <option value="sha1">SHA-1</option>
-                        </select>
-                        {!isSubmitted && !loading && (
-                        <button  onClick={(e) => {e.stopPropagation(); handleSubmitDictionnary()}}>
-                             {t('attack-btn')}</button>
-                        )}  
-                        {/* Message de réponse */}
-                        {loading ? (
-                        <div className="response-message2">
-                            <Spinner animation="border" variant="success" size='sm' />  {/* Show loading message while request is being processed */}
-                        </div>
-                        ) : (
-                        <div className="response-message2">
-
-                            <p>{responseMessage2}</p>
-                            {responseMessage2 && !loading && (
-                            <VscDebugRestart style={{ fontSize: "20px", cursor: "pointer" }} onClick={(e) => {e.stopPropagation();handleIconClick()} }/>
-                            )}
-                            
-                        </div>
-                        )}
-                  </div></div>
+            
+            <div className="checkbox-item">
+              <div className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  id="key2" 
+                  onChange={(e) => toggleMatrix('matrix2', e.target.checked)} 
+                  onClick={stopPropagation}
+                />
+                <label htmlFor="key2">Clé 2</label>
+              </div>
+              <div className={`matrix-container ${visibleMatrices.matrix2 ? 'visible' : ''}`}>
+                <input type="text" className="matrix-input" placeholder="Valeur 1" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 2" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 3" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 4" onClick={stopPropagation} />
               </div>
             </div>
-              {/* Card 3 */}
-              <div
-              className={`swiper-slide ${flippedCardId === '3' ? 'flipped' : ''} 
-                ${clickedCardId && clickedCardId !== '3' ? 'blurry' : ''} 
-                ${clickedCardId === '3' ? 'selected' : ''}`}
-              onClick={(e) => handleCardClick('3', e)} // Pass the event to prevent propagation
-            >
-              <div className="slide-content">
-                <div className="front">
-                <div className='about'>
-                    <h1 className='front-title'>{t('improved-dict')}</h1>
-                    <h1  id='ab'>{t('about')}</h1>
-                    <p>
-                    {t('improved-dict-desc')}
-                    </p>
-                  </div>
-                </div>
-                <div className="back"><div className="input-content"> 
-                    <h1 id='attack-title'>{t('improved-dict')}</h1>
-                    <input type="text"  id='hash-3' placeholder={t('hash-placeholder')} value={inputValue} 
-                      onChange={(e) => setInputValue(e.target.value)} />
-                    <h1 id='salt-title'>Salt</h1>
-                    <input type="text" id='salt-3' placeholder={t('salt-placeholder')} value={saltValue} // Bind to salt input state
-                      onChange={(e) => setSaltValue(e.target.value)} />
-                    <select 
-                          value={selectedHashMethod}
-                          onChange={handleHashMethodChange}
-                          className='select-attacks'
-                        >
-                          <option value="md5">MD5</option>
-                          <option value="sha256">SHA-256</option>
-                          <option value="sha1">SHA-1</option>
-                        </select>
-                        {!isSubmitted && !loading && (
-                        <button  onClick={(e) => {e.stopPropagation(); handleSubmitImprovedDictionnary()}}>
-                             {t('attack-btn')}</button>
-                        )}  
-                        {/* Message de réponse */}
-                        {loading ? (
-                        <div className="response-message3">
-                           <Spinner animation="border" variant="success" size='sm' />  {/* Show loading message while request is being processed */}
-                        </div>
-                        ) : (
-                        <div className="response-message3">
-
-                            <p>{responseMessage3}</p>
-                            {responseMessage3 && !loading && (
-                            <VscDebugRestart style={{ fontSize: "20px", cursor: "pointer" }} onClick={(e) => {e.stopPropagation();handleIconClick()} }/>
-                            )}
-                            
-                        </div>
-                        )}
-                  </div>
-               </div> 
+            
+            <div className="checkbox-item">
+              <div className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  id="key3" 
+                  onChange={(e) => toggleMatrix('matrix3', e.target.checked)} 
+                  onClick={stopPropagation}
+                />
+                <label htmlFor="key3">Clé 3</label>
+              </div>
+              <div className={`matrix-container ${visibleMatrices.matrix3 ? 'visible' : ''}`}>
+                <input type="text" className="matrix-input" placeholder="Valeur 1" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 2" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 3" onClick={stopPropagation} />
+                <input type="text" className="matrix-input" placeholder="Valeur 4" onClick={stopPropagation} />
               </div>
             </div>
-
-           {/* Card 4  */}
-           <div
-              className={`swiper-slide ${flippedCardId === '4' ? 'flipped' : ''} 
-                ${clickedCardId && clickedCardId !== '4' ? 'blurry' : ''} 
-                ${clickedCardId === '4' ? 'selected' : ''}`}
-              onClick={(e) => handleCardClick('4', e)} // Pass the event to prevent propagation
-            >
-              <div className="slide-content">
-                <div className="front">
-                <div className='about'>
-                    <h1 className='front-title'>{t('hybrid')}</h1>
-                    <h1 id='ab'>{t('about')}</h1>
-                    <p>
-                   {t('hybrid-desc')}
-                   </p>
-                  </div>
-                </div>
-                <div className="back">
-                <div className="input-content"> 
-                    <h1 id='attack-title'>{t('hybrid')}</h1>
-                    <input type="text"  id='hash-4' placeholder={t('hash-placeholder')} value={inputValue} 
-                      onChange={(e) => setInputValue(e.target.value)} />
-                    <h1 id='salt-title'>Salt</h1>
-                    <input type="text" id='salt-4' placeholder={t('salt-placeholder')}value={saltValue} // Bind to salt input state
-                      onChange={(e) => setSaltValue(e.target.value)} />
-                    <select 
-                          value={selectedHashMethod}
-                          onChange={handleHashMethodChange}
-                          className='select-attacks'
-                        >
-                          <option value="md5">MD5</option>
-                          <option value="sha256">SHA-256</option>
-                          <option value="sha1">SHA-1</option>
-                        </select>
-                        {!isSubmitted && !loading && (
-                        <button  onClick={(e) => {e.stopPropagation(); handleSubmitHybrid()}}>
-                            {t('attack-btn')}</button>
-                        )}  
-                        {/* Message de réponse */}
-                        {loading ? (
-                        <div className="response-message4">
-                            <Spinner animation="border" variant="success" size='sm' />  {/* Show loading message while request is being processed */}
-                        </div>
-                        ) : (
-                        <div className="response-message4">
-
-                            <p>{responseMessage4}</p>
-                            {responseMessage4 && !loading && (
-                            <VscDebugRestart style={{ fontSize: "20px", cursor: "pointer" }} onClick={(e) => {e.stopPropagation();handleIconClick()} }/>
-                            )}
-                            
-                        </div>
-                        )}
-                    
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
-        </div>
-
-        <div className="swiper-button-prev" ref={prevButtonRef}>
-          <FaChevronLeft size={40} color="#fff" />
-        </div>
-        <div className="swiper-button-next" ref={nextButtonRef}>
-          <FaChevronRight size={40} color="#fff" />
+          
+          <button className="launch-button" onClick={lancerOperation}>LANCER</button>
         </div>
       </div>
     </div>
+    </div>
   );
-}
+};
 
-export default Page1;
+// Styles CSS pour le composant
+const styles = `
+  .card-container {
+    perspective: 1000px;
+    width: 500px;
+    height: 600px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    cursor: pointer;
+  }
+
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-front {
+    background-color: #2D372F;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .card-back {
+    background-color: #2D372F;
+    transform: rotateY(180deg);
+  }
+
+  .card-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .large-textarea {
+    width: 100%;
+    height: 240px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    resize: none;
+    margin-bottom: 20px;
+  }
+
+  .checkbox-container {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
+  .checkbox-label label {
+    margin-left: 10px;
+    font-size: 16px;
+  }
+
+  .matrix-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    margin-top: 10px;
+    margin-left: 25px;
+    width: calc(100% - 25px);
+    display: none;
+  }
+
+  .matrix-container.visible {
+    display: grid;
+  }
+
+  .matrix-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: text;
+  }
+
+  input, textarea {
+    cursor: text;
+  }
+
+  .launch-button {
+    padding: 12px 24px;
+    background-color: #1EA86E;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: auto;
+    align-self: center;
+    width: 180px;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .launch-button:hover {
+    background-color: #1EA86E;
+    transform: scale(1.05);
+  }
+
+  .launch-button:active {
+    transform: scale(0.95);
+  }
+`;
+
+// Ajout du style au head du document
+const StyleComponent = () => {
+  return <style>{styles}</style>;
+};
+
+// Composant principal à exporter
+const CardApp = () => {
+  return (
+    <div style={{ 
+      fontFamily: 'Arial, sans-serif',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      backgroundColor: '#1B2D1F',
+      margin: 0,
+      padding: '20px'
+    }}>
+      <StyleComponent />
+      <CardComponent />
+    </div>
+  );
+};
+
+export default CardApp;
