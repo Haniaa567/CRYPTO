@@ -61,7 +61,7 @@
     "improved-dict":"Dict amélioré",
     "brute-force-desc":" Une attaque par force brute consiste à tester de nombreuses combinaisons de mots de passe ou de clés jusqu'à ce que la bonne soit trouvée.",
     "dictionary-desc":" Une attaque par dictionnaire est une méthode pour cracker les mots de passe en testant une liste de combinaisons courantes de mots de passe ou de clés jusqu'à ce que le bon soit trouvé.",
-    "hybrid-desc":"Une attaque hybride combine les forces des techniques de dictionnaire et de force brute en testant d'abord les mots de passe courants provenant d'un dictionnaire, puis en ajoutant des caractères ou des variations supplémentaires.",
+    "hybrid-desc":"Le chiffrement de Hill est une méthode de cryptographie utilisant l'algèbre linéaire pour chiffrer du texte via une matrice clé. Inventé en 1929, il est efficace mais vulnérable aux attaques par analyse matricielle.",
     "improved-dict-desc":"Elle applique des transformations,comme l'ajout de chiffres, de symboles ou la capitalisation de lettres, aux mots de passe courants, rendant l'attaque plus efficace contre des mots de passe légèrement plus forts.",
     "attack-btn":"Cliquez pour commencer",
     "hash-placeholder":"entrez votre mot de passe hashé...",

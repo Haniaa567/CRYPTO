@@ -61,7 +61,7 @@
     "improved-dict":"Improved dict",
     "brute-force-desc":"A brute force attack involves testing numerous combinations of passwords or keys until the correct one is found.",
     "dictionary-desc":"A dictionary attack is a method to crack passwords by testing a list of commonly used combinations of passwords or keys until the correct one is found.",
-    "hybrid-desc":" A hybrid attack combines the strengths of both dictionary and brute force techniques by first testing common passwords from a dictionary and then extending those passwords with additional characters or variations.",
+    "hybrid-desc":" The Hill cipher is a cryptographic method that uses linear algebra to encrypt text with a key matrix. Invented in 1929, it is effective but vulnerable to matrix-based attacks.",
     "improved-dict-desc":"An improved dictionary attack enhances the basic approach by applying transformations,such as adding numbers, symbols, or capitalizing letters, to common passwords, making it more effective against slightly stronger passwords.",
     "attack-btn":"Click to start",
     "hash-placeholder":"enter your hashed password...",

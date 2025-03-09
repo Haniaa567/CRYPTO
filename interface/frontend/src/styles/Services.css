@@ -1,5 +1,280 @@
 /*attacks css*/
+#Attacks, #passwordtesting, #encryptdecrypt, #timeprediction {
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #1B2D1F;
+  display: flex;
+  flex-direction: column;
+}
 
+#passwordtesting, #encryptdecrypt, #timeprediction {
+  min-height: 100vh;
+}
+
+#Attacks {
+  height: 100vh;
+}
+
+.navbar-container {
+  z-index: 2;
+}
+
+.centered-card-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.card-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 15px;
+  width: 40%; /* Réduit à 40% au lieu de 60% */
+  height: 110%; /* Réduit à 60% au lieu de 80% */
+  position: relative;
+  cursor: pointer;
+  perspective: 1000px;
+  transform: scale(0.9); /* Réduit de 1.2 à 0.9 */
+  transition: transform 0.3s ease-in-out;
+}
+
+.card-slide.selected {
+  transform: scale(00.9rem); /* Réduit de 1.3 à 1 quand sélectionné */
+}
+
+.slide-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.card-slide.flipped .slide-content {
+  transform: rotateY(180deg);
+}
+
+.front,
+.back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+}
+
+.front {
+  background-color: #2D372F;
+  color: white;
+  background-image: url("../assets/Group 202.svg"), url("../assets/Group 166.svg");
+  background-size: 110%, 70%;
+  background-position: center, top;
+  background-repeat: no-repeat, no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.front h1 {
+  font-size: 1.2rem; /* Réduit de 1.5rem */
+}
+
+.back {
+  background-color: #2D372F;
+  color: white;
+  transform: rotateY(180deg);
+  background-image: url("../assets/Group 202.svg");
+  background-size: 110%;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  font-size: 0.9rem; /* Réduit de 1.1rem */
+  gap: 10px; /* Réduit de 15px */
+  margin-top: 20px; /* Reduced from 30px */
+  width: 90%; /* Increased from 85% for larger text container */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-content h1 {
+  font-size: 0.9rem; /* Réduit de 1.1rem */
+  align-self: flex-start;
+}
+
+#attack-title {
+  align-self: center;
+  font-size: 1.4rem; /* Réduit de 1.8rem */
+  background: linear-gradient(90deg, #00DF82, white);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+#key-title {
+  border-bottom: solid #1EA86E;
+  color: #1EA86E;
+}
+
+.matrix-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+  width: 85%;
+  margin-top: 8px;
+  
+}
+
+.matrix-input {
+  outline: none;
+  border-radius: 8px;
+  background-color: #465349;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  width: 100%;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin-left: 35px;
+  margin-top: 5px;
+}
+
+.checkbox-container input[type="checkbox"] {
+  accent-color: #1EA86E;
+  width: 16px;
+  height: 16px;
+}
+
+#hash-4 {
+  outline: none;
+  border-radius: 10px;
+  background-color: #465349;
+  border: none;
+  color: white;
+  margin-top: 50px;
+  padding: 30px 5px; /* Réduit de 8px 12px */
+  width: 85%;
+  font-size: 0.8rem; /* Réduit de 0.9rem */
+}
+
+#hash-4::placeholder {
+  font-size: 0.6rem; /* Réduit de 0.8rem */
+}
+
+.input-content button {
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  padding: 6px 15px; /* Réduit de 8px 20px */
+  background-color: #1EA86E;
+  color: white;
+  margin-top: 10px; /* Réduit de 15px */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  font-size: 0.8rem; /* Réduit de 0.9rem */
+}
+
+.input-content button:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-0.25em);
+}
+
+.about {
+  font-size: 0.9rem;
+  padding: 20px; /* Réduit de 30px */
+  margin-top: 100px; /* Réduit de 80px */
+  margin-left: 15px;
+  width:85%;
+  color: #E8F4E6;
+}
+
+.front-title {
+  margin-bottom: 20px; /* Réduit de 30px */
+  text-align: center;
+}
+
+#ab {
+  font-size: 1rem; /* Réduit de 1.2rem */
+  background: linear-gradient(90deg, #00DF82, white);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.select-attacks {
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  background-color: #465349;
+  color: white;
+  padding: 6px 10px; /* Réduit de 8px 12px */
+  width: 60%;
+  font-size: 0.8rem; /* Réduit de 0.9rem */
+}
+
+.response-message4 {
+  padding: 8px; /* Réduit de 12px */
+  color: #13cd89;
+  border-radius: 5px;
+  font-size: 0.8rem; /* Réduit de 0.9rem */
+  text-align: center;
+  min-height: 30px; /* Réduit de 40px */
+}
+.known-word-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 85%;
+  margin-top: 8px;
+}
+
+.known-word-input {
+  outline: none;
+  border-radius: 8px;
+  background-color: #465349;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  width: 100%;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* You might need to adjust this to ensure proper spacing between checkbox groups */
+.checkbox-container + .checkbox-container {
+  margin-top: 8px;
+}
+
+/* Ensure the matrix container and known word container are properly spaced */
+.matrix-container, .known-word-container {
+  margin-bottom: 12px;
+}
+/*
 #Attacks,#passwordtesting,#encryptdecrypt,#timeprediction{
    
     min-width: 100%;
@@ -111,25 +386,23 @@
   
   .blurry .front,
 .blurry .back {
-  filter: blur(5px); /* Apply blur effect */
-  pointer-events: none; /* Disable interactions with blurry cards */
+  filter: blur(5px); 
+  pointer-events: none; 
 }
 
 .swiper-slide .front,
 .swiper-slide .back {
-    transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition for blur and scaling */ /* Smooth transition for blur */
+    transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out; 
 }
 
 .selected {
-    z-index: 10; /* Bring the selected card to the front */
-    transform: scale(1.1); /* Slightly scale up the selected card */
-  }
+    z-index: 10; 
+    transform: scale(1.1);
   
-  /* Non-selected cards */
+  // Non-selected cards 
   .swiper-slide:not(.selected) {
-    z-index: 1; /* Push non-selected cards to the back */
-    transform: scale(0.9); /* Scale down the non-selected cards */
-  }
+    z-index: 1; 
+    transform: scale(0.9); 
 .swiper-button-prev,.swiper-button-next{
   position: absolute;
   top: 50%;
@@ -231,7 +504,7 @@
    
 }
 .input-content button:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Horizontal, Vertical, Blur radius, Color */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
     transform: translateY(-0.25em);
     
   }
@@ -274,7 +547,7 @@
   text-align: center;
  
 }
-
+*/
 
 /*encrypt decrypt css*/
 .container{
