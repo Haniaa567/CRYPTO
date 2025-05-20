@@ -100,6 +100,8 @@ r, s = sign(phrase, p, q, g, x)
 # Afficher la signature
 print(f"Signature numérique (r, s) pour '{phrase}' : ({r}, {s})")
 '''
+#20/05/2025
+"""""
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import dsa, rsa
 from cryptography.hazmat.backends import default_backend
@@ -131,6 +133,56 @@ decrypted_message = rsa_private_key.decrypt(cipher, padding.OAEP(mgf=padding.MGF
 
 try:
     dsa_public_key.verify(signature, decrypted_message, algorithm=hashes.SHA256())
+    print(f"Message déchiffré: {decrypted_message.decode()}")
+    print("La signature est valide.")
+except Exception as e:
+    print(f"La signature n'est pas valide: {e}")
+    """
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import dsa, rsa, padding
+from cryptography.hazmat.backends import default_backend
+
+# Génération des clés DSA
+dsa_private_key = dsa.generate_private_key(key_size=2048, backend=default_backend())
+dsa_public_key = dsa_private_key.public_key()
+
+# Génération des clés RSA
+rsa_private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
+rsa_public_key = rsa_private_key.public_key()
+
+# Entrer le message
+message = input("Entrez le message à chiffrer et signer: ").encode()
+
+# Chiffrement avec RSA
+cipher = rsa_public_key.encrypt(
+    message,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    )
+)
+
+# Signature avec DSA
+signature = dsa_private_key.sign(message, hashes.SHA256())  # On signe le message original, pas le chiffré
+
+# Envoyer le message chiffré et la signature
+print(f"Message chiffré: {cipher.hex()}")
+print(f"Signature DSA: {signature.hex()}")
+
+# Côté destinataire
+decrypted_message = rsa_private_key.decrypt(
+    cipher,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    )
+)
+
+try:
+    # Vérifier la signature sur le message original déchiffré
+    dsa_public_key.verify(signature, decrypted_message, hashes.SHA256())
     print(f"Message déchiffré: {decrypted_message.decode()}")
     print("La signature est valide.")
 except Exception as e:
