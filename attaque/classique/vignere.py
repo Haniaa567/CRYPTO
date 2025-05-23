@@ -1,6 +1,6 @@
 # coding=utf-8
 from __future__ import division, print_function, absolute_import
-from getchr import *
+from attaque.classique.getchr import *
 def add(x,y):
     if x == "_" or y == "_":
         return "_"
